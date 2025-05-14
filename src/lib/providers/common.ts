@@ -1,4 +1,4 @@
-import { AutoComplete, tryCatch } from "~/utils";
+import { AutoComplete, tryCatch } from "~/lib/utils";
 
 import githubProvider from "./github/api";
 
@@ -28,9 +28,11 @@ export type SortType = "newest" | "oldest" | "stargazers" | "watchers";
 export type Providers = AutoComplete<"github">;
 
 export type ForkResponse<TData = Fork> = {
-	page: number;
-	perPage: number;
-	count: number;
+	pagination: {
+		start: number;
+		end: number;
+		total: number;
+	};
 	forks: TData[];
 };
 
