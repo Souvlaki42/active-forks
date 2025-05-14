@@ -9,19 +9,21 @@ const forks = async ({
 	page = 1,
 	perPage = 30,
 }: FetchArgs): Promise<ForkResponse> => {
-	if (!repo) throw new Error("You haven't selected a repo yet!");
+	if (!repo)
+		throw new Error("You haven't selected a repo yet!", { cause: "no repo" });
 
 	const octokit = getOctokit();
 	const redis = getRedis();
 
 	const [owner, name] = repo.split("/", 2);
 
-	const redisKey = `forks:${owner}/${name}?sort=${sort}&page=${page}&perPage=${perPage}`;
+	const cacheKey = `forks:${owner}/${name}?sort=${sort}&page=${page}&perPage=${perPage}`;
 
-	let cached = await redis.get<string>(redisKey);
+	const cached = await redis.get<string>(cacheKey);
 
 	if (cached) {
-		return JSON.parse(cached) as ForkResponse;
+		const raw = typeof cached === "string" ? cached : JSON.stringify(cached);
+		return JSON.parse(raw) as ForkResponse;
 	}
 
 	const forkResponse = await octokit.rest.repos.listForks({
@@ -38,17 +40,18 @@ const forks = async ({
 
 	if (forkResponse.status != 200 || countResponse.status != 200)
 		throw new Error(
-			"The selected repo doesn't exist or has no forks! Try again."
+			"The selected repo doesn't exist or has no forks! Try again with a different repo.",
+			{ cause: "no forks" }
 		);
 
-	const start = (page - 1) * perPage;
+	const start = (page - 1) * perPage + 1;
 	const end = start + perPage;
 
 	const total = countResponse.data.items[0].forks_count;
 
 	const forks = ListOfForksSchema.parse(forkResponse.data);
 
-	const response = {
+	const response: ForkResponse = {
 		pagination: {
 			start,
 			end,
@@ -71,8 +74,10 @@ const forks = async ({
 		}),
 	};
 
-	await redis.set(redisKey, JSON.stringify(response));
-	await redis.expire(redisKey, env.UPSTASH_REDIS_CACHE_TTL_SECONDS);
+	const payload = JSON.stringify(forkResponse);
+	await redis.set(cacheKey, payload, {
+		ex: env.UPSTASH_REDIS_CACHE_TTL_SECONDS,
+	});
 
 	return response;
 };
