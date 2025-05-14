@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Architects_Daughter } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import { ThemeProvider } from "~/components/theme-provider";
 import "./globals.css";
 
-const architects_daughter = Architects_Daughter({
+const mainFont = DM_Sans({
 	subsets: ["latin"],
 	weight: ["400"],
 });
@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={architects_daughter.className}>
+			<body className={mainFont.className}>
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"

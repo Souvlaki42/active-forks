@@ -1,8 +1,25 @@
 import Link from "next/link";
+import { ForksTable } from "~/components/forks-table/table";
 import { ModeToggle } from "~/components/mode-toggle";
 import { Card } from "~/components/ui/card";
+import { FetchArgs, getForks } from "~/lib/providers/common";
 
-export default async function Home() {
+export default async function Home({
+	searchParams,
+}: {
+	searchParams: Promise<FetchArgs>;
+}) {
+	const { page = 1, perPage = 30, repo, sort = "newest" } = await searchParams;
+
+	const { data: forkResponse, error } = await getForks("github", {
+		page,
+		perPage,
+		repo,
+		sort,
+	});
+
+	if (error && error.cause !== "no repo") throw error;
+
 	return (
 		<main className="min-h-screen bg-background text-foreground p-8">
 			<Card className="max-w-[1200px] mx-auto">
@@ -18,6 +35,10 @@ export default async function Home() {
 						</Link>
 						<ModeToggle />
 					</header>
+					<ForksTable
+						forkResponse={forkResponse}
+						searchParams={{ page, perPage, sort }}
+					/>
 				</div>
 			</Card>
 		</main>
