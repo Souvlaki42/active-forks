@@ -35,10 +35,7 @@ export default async function Home({
 						</Link>
 						<ModeToggle />
 					</header>
-					<ForksTable
-						forkResponse={forkResponse}
-						searchParams={{ page, perPage, sort }}
-					/>
+					<ForksTable forkResponse={forkResponse} />
 				</div>
 			</Card>
 		</main>

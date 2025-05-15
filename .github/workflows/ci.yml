@@ -1,0 +1,30 @@
+name: CI — TypeScript, ESLint, Prettier
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  checks:
+    name: Runs type and lint checks and formats code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm run install
+
+      - name: Type-check (no emit)
+        run: npx tsc --noEmit
+      - name: Lint with ESLint
+        run: npx run lint --max-warnings=0
+      - name: Check code formatting
+        run: npx run pretty
