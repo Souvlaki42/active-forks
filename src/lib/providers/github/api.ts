@@ -1,52 +1,56 @@
+import { z } from "zod";
 import { env } from "~/lib/env";
+import { ErrorWithCause } from "~/lib/errors";
 import { getOctokit, getRedis } from "~/lib/utils";
 import { FetchArgs, ForkResponse } from "../common";
-import { ListOfForksSchema } from "./schema";
+import { APIForkSchema, ForkResponseSchema } from "./schema";
 
 const forks = async ({
   repo,
-  sort = "newest",
   page = 1,
   perPage = 30,
 }: FetchArgs): Promise<ForkResponse> => {
   if (!repo)
-    throw new Error("You haven't selected a repo yet!", { cause: "no repo" });
+    throw new ErrorWithCause(
+      "You haven't selected a repo yet!",
+      "INVALID_REPO"
+    );
 
   const octokit = getOctokit();
   const redis = getRedis();
 
-  const [owner, name] = repo.split("/", 2);
+  if (repo.length !== 2) {
+    throw new ErrorWithCause(
+      "Invalid repo format! Please select a valid repo.",
+      "INVALID_REPO"
+    );
+  }
+
+  const [owner, name] = repo;
 
   const cacheKey = `forks:${owner}/${name}&page=${page}&perPage=${perPage}`;
 
   const cached = await redis.get<string>(cacheKey);
 
   if (cached) {
-    const raw = typeof cached === "string" ? cached : JSON.stringify(cached);
-    return JSON.parse(raw) as ForkResponse;
+    const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+    return ForkResponseSchema.parse(parsed);
   }
 
   const forkResponse = await octokit.rest.repos.listForks({
     owner,
     repo: name,
-    sort,
     page,
     per_page: perPage,
   });
 
   const countResponse = await octokit.rest.search.repos({
-    q: repo,
+    q: repo.join("/"),
   });
-
-  if (forkResponse.status != 200 || countResponse.status != 200)
-    throw new Error(
-      "The selected repo doesn't exist or has no forks! Try again with a different repo.",
-      { cause: "no forks" }
-    );
 
   const total = countResponse.data.items[0].forks_count;
 
-  const forks = ListOfForksSchema.parse(forkResponse.data);
+  const forks = z.array(APIForkSchema).parse(forkResponse.data);
 
   const response: ForkResponse = {
     total,

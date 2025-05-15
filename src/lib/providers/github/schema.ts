@@ -185,4 +185,21 @@ export const APIForkSchema = z.object({
   security_and_analysis: SecurityAndAnalysisSchema,
 });
 
-export const ListOfForksSchema = z.array(APIForkSchema);
+export const CustomForkSchema = z.object({
+  link: z.string(),
+  owner: z.string(),
+  avatar: z.string(),
+  name: z.string(),
+  branch: z.string(),
+  stars: z.number(),
+  watchers: z.number(),
+  forks: z.number(),
+  openIssues: z.number(),
+  size: z.number(),
+  lastPush: z.string().nullable().optional(),
+});
+
+export const ForkResponseSchema = z.object({
+  total: z.number(),
+  forks: z.array(CustomForkSchema),
+});
