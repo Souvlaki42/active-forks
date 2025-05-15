@@ -53,6 +53,9 @@ importers:
       tailwind-merge:
         specifier: ^3.3.0
         version: 3.3.0
+      tanstack-table-search-params:
+        specifier: ^0.9.0
+        version: 0.9.0(@tanstack/react-table@8.21.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       zod:
         specifier: ^3.24.4
         version: 3.24.4
@@ -2454,6 +2457,12 @@ packages:
 
   tailwindcss@4.1.6:
     resolution: {integrity: sha512-j0cGLTreM6u4OWzBeLBpycK0WIh8w7kSwcUsQZoGLHZ7xDTdM69lN64AgoIEEwFi0tnhs4wSykUa5YWxAzgFYg==}
+
+  tanstack-table-search-params@0.9.0:
+    resolution: {integrity: sha512-ty5ntIrLNVASR/RsvPvp4cvTdIEOtVg7Ucs0VMxidxMDxZxfz/qMolkyAEjAU217YfiBFrVjupYdLDCfPxGPmw==}
+    peerDependencies:
+      '@tanstack/react-table': '>=8.21.3'
+      react: '>=19.1.0'
 
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
@@ -5186,6 +5195,11 @@ snapshots:
   tailwind-merge@3.3.0: {}
 
   tailwindcss@4.1.6: {}
+
+  tanstack-table-search-params@0.9.0(@tanstack/react-table@8.21.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
+    dependencies:
+      '@tanstack/react-table': 8.21.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
 
   tapable@2.2.1: {}
 

@@ -8,8 +8,8 @@ import ClientDate from "../date";
 
 export const columns: ColumnDef<Fork>[] = [
 	{
-		header: "Link",
-		accessorKey: "link",
+		header: "Repo",
+		accessorKey: "name",
 		cell: ({ row: { original: row } }) => {
 			return (
 				<Link

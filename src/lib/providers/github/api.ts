@@ -17,7 +17,7 @@ const forks = async ({
 
 	const [owner, name] = repo.split("/", 2);
 
-	const cacheKey = `forks:${owner}/${name}?sort=${sort}&page=${page}&perPage=${perPage}`;
+	const cacheKey = `forks:${owner}/${name}&page=${page}&perPage=${perPage}`;
 
 	const cached = await redis.get<string>(cacheKey);
 
@@ -44,8 +44,8 @@ const forks = async ({
 			{ cause: "no forks" }
 		);
 
-	const start = (page - 1) * perPage + 1;
-	const end = start + perPage;
+	const start = (Number(page) - 1) * Number(perPage) + 1;
+	const end = start + Number(perPage) - 1;
 
 	const total = countResponse.data.items[0].forks_count;
 
@@ -74,7 +74,7 @@ const forks = async ({
 		}),
 	};
 
-	const payload = JSON.stringify(forkResponse);
+	const payload = JSON.stringify(response);
 	await redis.set(cacheKey, payload, {
 		ex: env.UPSTASH_REDIS_CACHE_TTL_SECONDS,
 	});

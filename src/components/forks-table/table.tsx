@@ -1,14 +1,12 @@
 "use client";
 
 import {
-	ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
-	PaginationState,
-	SortingState,
 	useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTableSearchParams } from "tanstack-table-search-params";
 import { FetchArgs, Fork, ForkResponse } from "~/lib/providers/common";
 import {
 	Table,
@@ -28,12 +26,28 @@ export function ForksTable({
 	forkResponse: ForkResponse<Fork> | null;
 	searchParams: Omit<Required<FetchArgs>, "repo">;
 }) {
-	const [pagination, setPagination] = useState<PaginationState>({
-		pageIndex: searchParams.page - 1,
-		pageSize: searchParams.perPage,
-	});
-	const [sorting, setSorting] = useState<SortingState>([]);
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+	const { replace } = useRouter();
+	const stateAndOnChanges = useTableSearchParams(
+		{
+			pathname: usePathname(),
+			query: useSearchParams(),
+			replace,
+		},
+		{
+			paramNames: {
+				pagination: {
+					pageIndex: "page",
+					pageSize: "perPage",
+				},
+			},
+			defaultValues: {
+				pagination: {
+					pageIndex: 0,
+					pageSize: 30,
+				},
+			},
+		}
+	);
 
 	const table = useReactTable({
 		data: forkResponse?.forks ?? [],
@@ -43,10 +57,7 @@ export function ForksTable({
 		manualSorting: true,
 		manualFiltering: true,
 		rowCount: forkResponse?.pagination.total ?? 0,
-		state: { pagination, sorting, columnFilters },
-		onPaginationChange: setPagination,
-		onSortingChange: setSorting,
-		onColumnFiltersChange: setColumnFilters,
+		...stateAndOnChanges,
 	});
 
 	return (
