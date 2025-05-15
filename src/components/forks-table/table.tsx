@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTableSearchParams } from "tanstack-table-search-params";
-import { Fork, ForkResponse } from "~/lib/providers/common";
+import { ForkResponse } from "~/lib/providers/common";
 import {
   Table,
   TableBody,
@@ -22,7 +22,7 @@ import { PaginationControls } from "./pagination";
 export function ForksTable({
   forkResponse,
 }: {
-  forkResponse: ForkResponse<Fork> | null;
+  forkResponse: ForkResponse | null;
 }) {
   const { replace } = useRouter();
   const stateAndOnChanges = useTableSearchParams(
