@@ -28,11 +28,7 @@ export type SortType = "newest" | "oldest" | "stargazers" | "watchers";
 export type Providers = AutoComplete<"github">;
 
 export type ForkResponse<TData = Fork> = {
-	pagination: {
-		start: number;
-		end: number;
-		total: number;
-	};
+	total: number;
 	forks: TData[];
 };
 

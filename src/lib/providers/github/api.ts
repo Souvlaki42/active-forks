@@ -44,19 +44,12 @@ const forks = async ({
 			{ cause: "no forks" }
 		);
 
-	const start = (Number(page) - 1) * Number(perPage) + 1;
-	const end = start + Number(perPage) - 1;
-
 	const total = countResponse.data.items[0].forks_count;
 
 	const forks = ListOfForksSchema.parse(forkResponse.data);
 
 	const response: ForkResponse = {
-		pagination: {
-			start,
-			end,
-			total,
-		},
+		total,
 		forks: forks.map((fork) => {
 			return {
 				link: fork.html_url,

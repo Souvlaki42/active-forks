@@ -14,22 +14,24 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { ForkResponse } from "~/lib/providers/common";
 
 export function PaginationControls<TData>({
 	table,
-	pagination,
+	total,
 }: {
 	table: Table<TData>;
-	pagination?: ForkResponse["pagination"];
+	total: number;
 }) {
 	const { pageIndex, pageSize } = table.getState().pagination;
+
+	const start = pageIndex * pageSize + 1;
+	const end = start + table.getRowModel().rows.length - 1;
 
 	return (
 		<div className="flex items-center justify-between px-2 py-4">
 			<div className="flex-1 text-sm text-muted-foreground">
-				{pagination?.start ?? 0}–{pagination?.end ?? 0} of{" "}
-				{pagination?.total ?? 0}
+				{total > 0 && `Showing ${start} to ${end} of ${total} results`}
+				{total === 0 && "No results found"}
 			</div>
 
 			<div className="flex items-center space-x-6 lg:space-x-8">
@@ -53,7 +55,8 @@ export function PaginationControls<TData>({
 				</div>
 
 				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
-					Page {pageIndex + 1} of {table.getPageCount()}
+					{total > 0 && `Page ${pageIndex + 1} of ${table.getPageCount()}`}
+					{total === 0 && "Page 0 of 0"}
 				</div>
 
 				<div className="flex items-center space-x-2">
