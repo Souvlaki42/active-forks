@@ -5,6 +5,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Loader2 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTableSearchParams } from "tanstack-table-search-params";
 import { ForkResponse } from "~/lib/providers/common";
@@ -20,15 +21,20 @@ import { columns } from "./columns";
 import { PaginationControls } from "./pagination";
 
 export function ForksTable({
-  forkResponse,
+  data = { forks: [], total: 0 },
+  loading = false,
 }: {
-  forkResponse: ForkResponse | null;
+  data?: ForkResponse;
+  loading?: boolean;
 }) {
   const { replace } = useRouter();
+  const query = useSearchParams();
+  const pathname = usePathname();
+
   const stateAndOnChanges = useTableSearchParams(
     {
-      pathname: usePathname(),
-      query: useSearchParams(),
+      pathname,
+      query,
       replace,
     },
     {
@@ -48,13 +54,13 @@ export function ForksTable({
   );
 
   const table = useReactTable({
-    data: forkResponse?.forks ?? [],
+    data: data?.forks ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
-    rowCount: forkResponse?.total ?? 0,
+    rowCount: data?.total ?? 0,
     ...stateAndOnChanges,
   });
 
@@ -81,7 +87,15 @@ export function ForksTable({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-48">
+                  <div className="flex h-full items-center justify-center">
+                    <Loader2 className="text-primary h-8 w-8 animate-spin" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -110,7 +124,7 @@ export function ForksTable({
           </TableBody>
         </Table>
       </div>
-      <PaginationControls table={table} total={forkResponse?.total ?? 0} />
+      <PaginationControls table={table} total={data?.total ?? 0} />
     </div>
   );
 }
