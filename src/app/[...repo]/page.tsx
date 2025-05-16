@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { CardLayout } from "~/components/card-layout";
 import { ForksTable } from "~/components/forks-table/table";
 import { FetchArgs, getForks } from "~/lib/providers/common";
@@ -13,7 +14,7 @@ export default async function Repo({
   const { repo } = await params;
   const { page = 1, perPage = 30 } = await searchParams;
 
-  const { data: forkResponse, error } = await getForks("github", {
+  const { data, error } = await getForks("github", {
     page,
     perPage,
     repo,
@@ -25,7 +26,9 @@ export default async function Repo({
 
   return (
     <CardLayout>
-      <ForksTable forkResponse={forkResponse} />
+      <Suspense fallback={<ForksTable loading />}>
+        <ForksTable data={data} />
+      </Suspense>
     </CardLayout>
   );
 }
