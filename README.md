@@ -2,6 +2,10 @@
 
 A Next.js app that shows the active forks of a GitHub repository.
 
+## TODO
+
+For todos, work in progress, and ideas, see [the project board](https://github.com/users/Souvlaki42/projects/3).
+
 ## Getting Started
 
 First, run the development server:
