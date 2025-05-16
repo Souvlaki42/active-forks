@@ -34,7 +34,7 @@ jobs:
         run: pnpm tsc
 
       - name: Lint with ESLint
-        run: pnpm lint -- --max-warnings=0
+        run: pnpm lint:strict
 
       - name: Check code formatting
         run: pnpm format

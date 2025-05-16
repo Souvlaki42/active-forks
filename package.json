@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:strict": "next lint --fix --max-warnings=0",
     "tsc": "tsc --noEmit",
     "format": "prettier --write --list-different \"**/*.{js,jsx,ts,tsx,json}\""
   },
