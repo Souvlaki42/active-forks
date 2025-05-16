@@ -4,6 +4,7 @@ import { ErrorWithCause } from "~/lib/errors";
 import { getOctokit, getRedis, repoPattern } from "~/lib/utils";
 import { FetchArgs, ForkResponse } from "../common";
 import { APIForkSchema, ForkResponseSchema } from "./schema";
+import search from "./search";
 
 const forks = async ({
   repo,
@@ -47,11 +48,10 @@ const forks = async ({
     per_page: perPage,
   });
 
-  const countResponse = await octokit.rest.search.repos({
-    q: fullRepo,
-  });
+  // TODO: Maybe we can deduplicate these checks for query's validity
+  const reposFound = await search(repo);
 
-  const total = countResponse.data.items[0].forks_count;
+  const total = reposFound[0].forks;
 
   const forks = z.array(APIForkSchema).parse(forkResponse.data);
 
