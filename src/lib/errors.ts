@@ -1,5 +1,6 @@
 import { RequestError } from "octokit";
 import { z } from "zod";
+import { AutoComplete } from "./utils";
 
 type CauseType =
   | "INVALID_REPO"
@@ -29,13 +30,29 @@ export function isError(value: unknown): value is Error {
 }
 
 export class ErrorWithCause extends Error {
-  cause: CauseType;
-  constructor(message: string, cause: CauseType) {
+  cause?: AutoComplete<CauseType>;
+  constructor(
+    message: string,
+    cause: AutoComplete<CauseType> = "UNEXPECTED_ERROR"
+  ) {
     super(message, { cause });
     this.cause = cause;
   }
+  static isError(value: unknown): value is ErrorWithCause {
+    return isError(value) && "cause" in value;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      stack: this.stack,
+      cause: this.cause,
+    };
+  }
+
   static from(error?: unknown): ErrorWithCause {
-    if (error instanceof ErrorWithCause) return error;
+    if (ErrorWithCause.isError(error)) return error;
     if (error instanceof RequestError) {
       if (error.status === 404)
         return new ErrorWithCause(error.message, "REPO_NOT_FOUND");
