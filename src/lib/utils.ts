@@ -17,6 +17,8 @@ export const urlPattern = new RegExp(
   "i" // fragment locator
 );
 
+export const repoPattern = /^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/;
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -33,6 +35,12 @@ type Failure<E> = {
   data: null;
   error: E;
 };
+
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};
+
+export type Unpromisify<T> = T extends Promise<infer U> ? U : T;
 
 export type Result<T, E = Error> = Success<T> | Failure<E>;
 

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { env } from "~/lib/env";
 import { ErrorWithCause } from "~/lib/errors";
-import { getOctokit, getRedis } from "~/lib/utils";
+import { getOctokit, getRedis, repoPattern } from "~/lib/utils";
 import { FetchArgs, ForkResponse } from "../common";
 import { APIForkSchema, ForkResponseSchema } from "./schema";
 
@@ -16,10 +16,11 @@ const forks = async ({
       "INVALID_REPO"
     );
 
-  const octokit = getOctokit();
+  const fullRepo = repo.join("/");
+
   const redis = getRedis();
 
-  if (repo.length !== 2) {
+  if (!repoPattern.test(fullRepo)) {
     throw new ErrorWithCause(
       "Invalid repo format! Please select a valid repo.",
       "INVALID_REPO"
@@ -37,6 +38,8 @@ const forks = async ({
     return ForkResponseSchema.parse(parsed);
   }
 
+  const octokit = getOctokit();
+
   const forkResponse = await octokit.rest.repos.listForks({
     owner,
     repo: name,
@@ -45,7 +48,7 @@ const forks = async ({
   });
 
   const countResponse = await octokit.rest.search.repos({
-    q: repo.join("/"),
+    q: fullRepo,
   });
 
   const total = countResponse.data.items[0].forks_count;
