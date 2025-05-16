@@ -4,14 +4,21 @@ import { urlPattern } from "./utils";
 
 export const env = createEnv({
   server: {
-    GITHUB_API_TOKEN: z.string().min(1, "GitHub token is required"),
+    GITHUB_API_TOKEN: z
+      .string({ description: "GitHub token" })
+      .min(1, "GitHub token is required"),
     UPSTASH_REDIS_REST_URL: z
-      .string()
+      .string({ description: "Redis URL" })
       .refine((url) => urlPattern.test(url), "Invalid Redis URL"),
-    UPSTASH_REDIS_REST_TOKEN: z.string().min(1, "Redis token is required"),
-    UPSTASH_REDIS_CACHE_TTL_SECONDS: z.number().default(60 * 60 * 24),
+    UPSTASH_REDIS_REST_TOKEN: z
+      .string({ description: "Redis token" })
+      .min(1, "Redis token is required"),
+    UPSTASH_REDIS_CACHE_TTL_SECONDS: z
+      .number({ description: "Seconds to cache data" })
+      .default(60 * 60 * 24),
   },
   client: {},
   experimental__runtimeEnv: {},
   emptyStringAsUndefined: true,
+  skipValidation: process.env.GITHUB_ACTIONS === "true",
 });

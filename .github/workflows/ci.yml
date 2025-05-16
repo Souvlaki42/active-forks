@@ -33,8 +33,8 @@ jobs:
       - name: Type-check (no emit)
         run: pnpm tsc
 
-      - name: Lint with ESLint
-        run: pnpm lint:strict
-
       - name: Check code formatting
         run: pnpm format
+
+      - name: Lint with ESLint
+        run: pnpm lint:strict
