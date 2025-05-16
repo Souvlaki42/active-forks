@@ -1,8 +1,14 @@
-import { AutoComplete, Result, tryCatch } from "~/lib/utils";
+import {
+  AutoComplete,
+  Prettify,
+  Result,
+  tryCatch,
+  Unpromisify,
+} from "~/lib/utils";
 
 import { z } from "zod";
 import { ErrorWithCause } from "../errors";
-import githubProvider from "./github/api";
+import githubProvider from "./github";
 import { CustomForkSchema, ForkResponseSchema } from "./github/schema";
 
 export type Fork = z.infer<typeof CustomForkSchema>;
@@ -13,26 +19,46 @@ export type FetchArgs = {
   perPage?: 10 | 30 | 50 | 100;
 };
 
-export type Providers = AutoComplete<"github">;
+type ProviderName = AutoComplete<"github">;
+
+type CommonProvider<T> = {
+  [K in keyof T]: T[K] extends (...args: infer Args) => infer ReturnType
+    ? (
+        provider: ProviderName,
+        ...args: Args
+      ) => Promise<Result<Unpromisify<ReturnType>, ErrorWithCause>>
+    : T[K];
+};
 
 export type ForkResponse = z.infer<typeof ForkResponseSchema>;
 
-const providers: Record<Providers, (args: FetchArgs) => Promise<ForkResponse>> =
-  {
-    github: githubProvider,
-  };
+type ProviderStruct = {
+  getForks: (args: FetchArgs) => Promise<ForkResponse>;
+  search: (query?: FetchArgs["repo"]) => Promise<Fork[]>;
+  schemas: Record<string, z.ZodSchema>;
+};
 
-export const getForks = async (
-  provider: Providers = "github",
-  args: FetchArgs
-): Promise<Result<ForkResponse, ErrorWithCause>> => {
-  "use server";
+const providers: Record<ProviderName, ProviderStruct> = {
+  github: githubProvider,
+};
 
-  const response = await tryCatch(providers[provider](args));
-
-  if (!response.error) {
-    return { data: response.data, error: null };
-  } else {
-    return { data: null, error: ErrorWithCause.from(response.error) };
-  }
+export const API: Prettify<CommonProvider<Omit<ProviderStruct, "schemas">>> = {
+  getForks: async (provider: ProviderName, args: FetchArgs) => {
+    "use server";
+    const response = await tryCatch(providers[provider].getForks(args));
+    if (!response.error) {
+      return { data: response.data, error: null };
+    } else {
+      return { data: null, error: ErrorWithCause.from(response.error) };
+    }
+  },
+  search: async (provider: ProviderName, query?: FetchArgs["repo"]) => {
+    "use server";
+    const response = await tryCatch(providers[provider].search(query));
+    if (!response.error) {
+      return { data: response.data, error: null };
+    } else {
+      return { data: null, error: ErrorWithCause.from(response.error) };
+    }
+  },
 };

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CardLayout } from "~/components/card-layout";
 import { ForksTable } from "~/components/forks-table/table";
-import { FetchArgs, getForks } from "~/lib/providers/common";
+import { API, FetchArgs } from "~/lib/providers/common";
 
 export default async function Repo({
   params,
@@ -14,7 +14,7 @@ export default async function Repo({
   const { repo } = await params;
   const { page = 1, perPage = 30 } = await searchParams;
 
-  const { data, error } = await getForks("github", {
+  const { data, error } = await API.getForks("github", {
     page,
     perPage,
     repo,
