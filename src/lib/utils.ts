@@ -1,3 +1,5 @@
+import { rankItem } from "@tanstack/match-sorter-utils";
+import { FilterFn } from "@tanstack/react-table";
 import { Redis } from "@upstash/redis";
 import { clsx, type ClassValue } from "clsx";
 import { Octokit } from "octokit";
@@ -39,6 +41,12 @@ type Failure<E> = {
 export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
+
+export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  const itemRank = rankItem(row.getValue(columnId), value);
+  addMeta({ itemRank });
+  return itemRank.passed;
+};
 
 export type Unpromisify<T> = T extends Promise<infer U> ? U : T;
 
