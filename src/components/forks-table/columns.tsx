@@ -5,11 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Fork } from "~/lib/providers/common";
 import ClientDate from "../date";
+import { ForkHeader } from "./header";
 
 export const columns: ColumnDef<Fork>[] = [
   {
-    header: "Repo",
     accessorKey: "name",
+    header: ({ column }) => <ForkHeader column={column} title="Repo" />,
     cell: ({ row: { original: row } }) => {
       return (
         <Link
@@ -23,8 +24,8 @@ export const columns: ColumnDef<Fork>[] = [
     },
   },
   {
-    header: "Owner",
     accessorKey: "owner",
+    header: ({ column }) => <ForkHeader column={column} title="Owner" />,
     cell: ({ row: { original: row } }) => {
       return (
         <Link
@@ -44,21 +45,38 @@ export const columns: ColumnDef<Fork>[] = [
       );
     },
   },
-  { header: "Branch", accessorKey: "branch" },
-  { header: "Stars", accessorKey: "stars" },
-  { header: "Forks", accessorKey: "forks" },
-  { header: "Watchers", accessorKey: "watchers" },
-  { header: "Open Issues", accessorKey: "openIssues" },
   {
-    header: "Size",
+    accessorKey: "branch",
+    header: ({ column }) => (
+      <ForkHeader column={column} title="Default Branch" />
+    ),
+  },
+  {
+    accessorKey: "stars",
+    header: ({ column }) => <ForkHeader column={column} title="Stars" />,
+  },
+  {
+    accessorKey: "forks",
+    header: ({ column }) => <ForkHeader column={column} title="Forks" />,
+  },
+  {
+    accessorKey: "watchers",
+    header: ({ column }) => <ForkHeader column={column} title="Watchers" />,
+  },
+  {
+    accessorKey: "openIssues",
+    header: ({ column }) => <ForkHeader column={column} title="Open Issues" />,
+  },
+  {
     accessorKey: "size",
+    header: ({ column }) => <ForkHeader column={column} title="Size" />,
     cell: ({ row: { original: row } }) => {
       return `${(row.size / 1024).toFixed(2)} MB`;
     },
   },
   {
-    header: "Last Push",
     accessorKey: "lastPush",
+    header: ({ column }) => <ForkHeader column={column} title="Last Push" />,
     cell: ({ row: { original: row } }) => {
       return <ClientDate date={row.lastPush} />;
     },

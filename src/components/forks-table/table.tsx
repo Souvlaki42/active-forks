@@ -3,6 +3,7 @@
 import {
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
@@ -39,16 +40,22 @@ export function ForksTable({
     },
     {
       paramNames: {
+        globalFilter: "globalFilter",
+        sorting: (defaultParamName) => defaultParamName,
         pagination: {
           pageIndex: "page",
-          pageSize: "perPage",
+          pageSize: "per_page",
         },
+        columnFilters: (defaultParamName) => defaultParamName,
+        columnOrder: (defaultParamName) => defaultParamName,
+        rowSelection: (defaultParamName) => defaultParamName,
       },
       defaultValues: {
         pagination: {
           pageIndex: 0,
           pageSize: 30,
         },
+        sorting: [{ id: "stars", desc: true }],
       },
     }
   );
@@ -57,8 +64,9 @@ export function ForksTable({
     data: data?.forks ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
-    manualSorting: true,
+    manualSorting: false,
     manualFiltering: true,
     rowCount: data?.total ?? 0,
     ...stateAndOnChanges,

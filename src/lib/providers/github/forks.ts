@@ -46,6 +46,7 @@ const forks = async ({
     repo: name,
     page,
     per_page: perPage,
+    sort: "stargazers",
   });
 
   // TODO: Maybe we can deduplicate these checks for query's validity
