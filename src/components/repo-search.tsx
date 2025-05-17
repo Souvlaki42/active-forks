@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,18 +21,18 @@ export function RepoSearchForm() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<z.infer<typeof RepoSearchSchema>> = (
-    values
-  ) => {
-    router.push(`/${values.repo}`);
-  };
-
   const form = useForm<z.infer<typeof RepoSearchSchema>>({
     resolver: zodResolver(RepoSearchSchema),
     defaultValues: {
       repo: pathname.substring(1),
     },
   });
+
+  const onSubmit: SubmitHandler<z.infer<typeof RepoSearchSchema>> = (
+    values
+  ) => {
+    router.push(`/${values.repo}`);
+  };
 
   return (
     <Form {...form}>
@@ -52,7 +53,12 @@ export function RepoSearchForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={form.formState.isSubmitted}>
+          {form.formState.isSubmitted ? (
+            <Loader2 className="text-secondary h-5 w-5 animate-spin" />
+          ) : null}
+          Search
+        </Button>
       </form>
     </Form>
   );
