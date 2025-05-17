@@ -16,7 +16,7 @@ export type Fork = z.infer<typeof CustomForkSchema>;
 export type FetchArgs = {
   repo?: string[];
   page?: number;
-  perPage?: 10 | 30 | 50 | 100;
+  per_page?: 10 | 30 | 50 | 100;
 };
 
 type ProviderName = AutoComplete<"github">;

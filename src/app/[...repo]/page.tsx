@@ -14,11 +14,11 @@ export default async function Repo({
   searchParams: Promise<Omit<FetchArgs, "repo">>;
 }) {
   const { repo } = await params;
-  const { page = 1, perPage = 30 } = await searchParams;
+  const { page = 1, per_page = 30 } = await searchParams;
 
   const { data, error } = await API.getForks("github", {
     page,
-    perPage,
+    per_page,
     repo,
   });
 

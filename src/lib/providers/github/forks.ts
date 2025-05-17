@@ -9,7 +9,7 @@ import search from "./search";
 const forks = async ({
   repo,
   page = 1,
-  perPage = 30,
+  per_page = 30,
 }: FetchArgs): Promise<ForkResponse> => {
   if (!repo)
     throw new ErrorWithCause(
@@ -30,7 +30,7 @@ const forks = async ({
 
   const [owner, name] = repo;
 
-  const cacheKey = `forks:${owner}/${name}&page=${page}&perPage=${perPage}`;
+  const cacheKey = `forks:${owner}/${name}&page=${page}&per_page=${per_page}`;
 
   const cached = await redis.get<string>(cacheKey);
 
@@ -45,7 +45,7 @@ const forks = async ({
     owner,
     repo: name,
     page,
-    per_page: perPage,
+    per_page,
     sort: "stargazers",
   });
 

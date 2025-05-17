@@ -5,6 +5,7 @@ import { clsx, type ClassValue } from "clsx";
 import { Octokit } from "octokit";
 import { env } from "process";
 import { twMerge } from "tailwind-merge";
+import { Fork } from "./providers/common";
 
 let octokit: Octokit | undefined;
 let redis: Redis | undefined;
@@ -42,7 +43,7 @@ export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
 
-export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+export const fuzzyFilter: FilterFn<Fork> = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value);
   addMeta({ itemRank });
   return itemRank.passed;
