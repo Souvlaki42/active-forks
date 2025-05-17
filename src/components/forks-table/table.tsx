@@ -3,12 +3,15 @@
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 import { Returns } from "tanstack-table-search-params";
 import { ForkResponse } from "~/lib/providers/common";
+import { fuzzyFilter } from "~/lib/utils";
+import { Input } from "../ui/input";
 import {
   Table,
   TableBody,
@@ -32,11 +35,12 @@ export function ForksTable({
   const table = useReactTable({
     data: data?.forks ?? [],
     columns,
+    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     manualPagination: true,
     manualSorting: false,
-    manualFiltering: true,
     enableSorting: data?.total !== 0,
     rowCount: data?.total ?? 0,
     ...query,
@@ -44,6 +48,13 @@ export function ForksTable({
 
   return (
     <div>
+      <div className="flex items-center py-4">
+        <Input
+          placeholder="Filter forks..."
+          onChange={(event) => table.setGlobalFilter(event.target.value)}
+          className="max-w-sm"
+        />
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

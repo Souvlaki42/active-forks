@@ -24,7 +24,7 @@ export function QueryForksTable({
     },
     {
       paramNames: {
-        globalFilter: "globalFilter",
+        globalFilter: "q",
         sorting: (defaultParamName) => defaultParamName,
         pagination: {
           pageIndex: "page",
