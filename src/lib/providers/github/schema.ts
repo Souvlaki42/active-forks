@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { repoPattern } from "~/lib/utils";
 
 const UserSchema = z.object({
   name: z.string().nullable().optional(),
@@ -202,4 +203,12 @@ export const CustomForkSchema = z.object({
 export const ForkResponseSchema = z.object({
   total: z.number(),
   forks: z.array(CustomForkSchema),
+});
+
+export const RepoSearchSchema = z.object({
+  repo: z
+    .string({ description: "The repo to search for forks" })
+    .refine((value) => repoPattern.test(value), {
+      message: "Invalid repo format! Please select a valid repo.",
+    }),
 });
