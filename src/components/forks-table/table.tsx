@@ -7,8 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useTableSearchParams } from "tanstack-table-search-params";
+import { Returns } from "tanstack-table-search-params";
 import { ForkResponse } from "~/lib/providers/common";
 import {
   Table,
@@ -24,42 +23,12 @@ import { PaginationControls } from "./pagination";
 export function ForksTable({
   data = { forks: [], total: 0 },
   loading = false,
+  query,
 }: {
   data?: ForkResponse;
   loading?: boolean;
+  query?: Returns;
 }) {
-  const { replace } = useRouter();
-  const query = useSearchParams();
-  const pathname = usePathname();
-
-  const stateAndOnChanges = useTableSearchParams(
-    {
-      pathname,
-      query,
-      replace,
-    },
-    {
-      paramNames: {
-        globalFilter: "globalFilter",
-        sorting: (defaultParamName) => defaultParamName,
-        pagination: {
-          pageIndex: "page",
-          pageSize: "per_page",
-        },
-        columnFilters: (defaultParamName) => defaultParamName,
-        columnOrder: (defaultParamName) => defaultParamName,
-        rowSelection: (defaultParamName) => defaultParamName,
-      },
-      defaultValues: {
-        pagination: {
-          pageIndex: 0,
-          pageSize: 30,
-        },
-        sorting: [{ id: "stars", desc: true }],
-      },
-    }
-  );
-
   const table = useReactTable({
     data: data?.forks ?? [],
     columns,
@@ -68,8 +37,9 @@ export function ForksTable({
     manualPagination: true,
     manualSorting: false,
     manualFiltering: true,
+    enableSorting: data?.total !== 0,
     rowCount: data?.total ?? 0,
-    ...stateAndOnChanges,
+    ...query,
   });
 
   return (

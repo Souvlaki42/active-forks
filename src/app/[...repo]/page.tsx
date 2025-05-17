@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CardLayout } from "~/components/card-layout";
+import { QueryForksTable } from "~/components/forks-table/query-table";
 import { ForksTable } from "~/components/forks-table/table";
 import { RepoSearchForm } from "~/components/repo-search";
 import { API, FetchArgs } from "~/lib/providers/common";
@@ -29,7 +30,7 @@ export default async function Repo({
     <CardLayout className="flex flex-col gap-4">
       <RepoSearchForm />
       <Suspense fallback={<ForksTable loading />}>
-        <ForksTable data={data} />
+        <QueryForksTable data={data} />
       </Suspense>
     </CardLayout>
   );
