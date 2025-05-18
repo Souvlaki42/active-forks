@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { ThemeProvider } from "~/components/theme-provider";
+import { Toaster } from "~/components/ui/sonner";
 import "./globals.css";
 
 const mainFont = DM_Sans({
@@ -30,6 +31,7 @@ export default function RootLayout({
         >
           <NextTopLoader color="var(--primary)" shadow={false} />
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
