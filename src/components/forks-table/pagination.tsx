@@ -15,17 +15,12 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 
-export function PaginationControls<TData>({
-  table,
-  total,
-}: {
-  table: Table<TData>;
-  total: number;
-}) {
+export function PaginationControls<TData>({ table }: { table: Table<TData> }) {
   const { pageIndex, pageSize } = table.getState().pagination;
 
   const start = pageIndex * pageSize + 1;
   const end = start + table.getRowModel().rows.length - 1;
+  const total = table.getRowCount();
 
   return (
     <div className="flex items-center justify-between px-2 py-4">

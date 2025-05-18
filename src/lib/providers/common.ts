@@ -33,8 +33,7 @@ type CommonProvider<T> = {
 export type ForkResponse = z.infer<typeof ForkResponseSchema>;
 
 type ProviderStruct = {
-  getForks: (args: FetchArgs) => Promise<ForkResponse>;
-  search: (query?: FetchArgs["repo"]) => Promise<Fork[]>;
+  getForks: (args: FetchArgs) => Promise<Fork[]>;
   schemas: Record<string, z.ZodSchema>;
 };
 
@@ -46,15 +45,6 @@ export const API: Prettify<CommonProvider<Omit<ProviderStruct, "schemas">>> = {
   getForks: async (provider: ProviderName, args: FetchArgs) => {
     "use server";
     const response = await tryCatch(providers[provider].getForks(args));
-    if (!response.error) {
-      return { data: response.data, error: null };
-    } else {
-      return { data: null, error: ErrorWithCause.from(response.error) };
-    }
-  },
-  search: async (provider: ProviderName, query?: FetchArgs["repo"]) => {
-    "use server";
-    const response = await tryCatch(providers[provider].search(query));
     if (!response.error) {
       return { data: response.data, error: null };
     } else {

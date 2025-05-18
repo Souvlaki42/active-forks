@@ -4,6 +4,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -11,7 +12,7 @@ import { Loader2 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
 import { useTableSearchParams } from "tanstack-table-search-params";
-import { ForkResponse } from "~/lib/providers/common";
+import { Fork } from "~/lib/providers/common";
 import { fuzzyFilter } from "~/lib/utils";
 import { Input } from "../ui/input";
 import {
@@ -26,10 +27,10 @@ import { columns } from "./columns";
 import { PaginationControls } from "./pagination";
 
 export function ForksTable({
-  data = { forks: [], total: 0 },
+  data = [],
   loading = false,
 }: {
-  data?: ForkResponse;
+  data?: Fork[];
   loading?: boolean;
 }) {
   const { replace } = useRouter();
@@ -65,16 +66,15 @@ export function ForksTable({
   );
 
   const table = useReactTable({
-    data: data?.forks ?? [],
+    data: data,
     columns,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    manualPagination: true,
-    manualSorting: false,
-    enableSorting: data?.total !== 0,
-    rowCount: data?.total ?? 0,
+    getPaginationRowModel: getPaginationRowModel(),
+    enableSorting: data.length !== 0,
+    rowCount: data.length,
     ...stateAndOnChanges,
   });
 
@@ -145,7 +145,7 @@ export function ForksTable({
           </TableBody>
         </Table>
       </div>
-      <PaginationControls table={table} total={data?.total ?? 0} />
+      <PaginationControls table={table} />
     </div>
   );
 }
