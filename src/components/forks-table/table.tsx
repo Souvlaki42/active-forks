@@ -8,7 +8,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
-import { Returns } from "tanstack-table-search-params";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
+import { useTableSearchParams } from "tanstack-table-search-params";
 import { ForkResponse } from "~/lib/providers/common";
 import { fuzzyFilter } from "~/lib/utils";
 import { Input } from "../ui/input";
@@ -26,12 +28,42 @@ import { PaginationControls } from "./pagination";
 export function ForksTable({
   data = { forks: [], total: 0 },
   loading = false,
-  query,
 }: {
   data?: ForkResponse;
   loading?: boolean;
-  query?: Returns;
 }) {
+  const { replace } = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const stateAndOnChanges = useTableSearchParams(
+    {
+      pathname,
+      query: searchParams,
+      replace,
+    },
+    {
+      paramNames: {
+        globalFilter: "q",
+        pagination: {
+          pageIndex: "page",
+          pageSize: "per_page",
+        },
+        sorting: (defaultParamName) => defaultParamName,
+        columnFilters: (defaultParamName) => defaultParamName,
+        columnOrder: (defaultParamName) => defaultParamName,
+        rowSelection: (defaultParamName) => defaultParamName,
+      },
+      defaultValues: {
+        pagination: {
+          pageIndex: 0,
+          pageSize: 30,
+        },
+        sorting: [{ id: "stars", desc: true }],
+      },
+    }
+  );
+
   const table = useReactTable({
     data: data?.forks ?? [],
     columns,
@@ -43,7 +75,7 @@ export function ForksTable({
     manualSorting: false,
     enableSorting: data?.total !== 0,
     rowCount: data?.total ?? 0,
-    ...query,
+    ...stateAndOnChanges,
   });
 
   return (
