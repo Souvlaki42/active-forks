@@ -1,6 +1,6 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
-import { urlPattern } from "./utils";
+import { urlPattern } from "./singletons/regex";
 
 export const env = createEnv({
   server: {
@@ -18,7 +18,7 @@ export const env = createEnv({
       .default(60 * 60 * 24),
   },
   client: {},
-  experimental__runtimeEnv: {},
+  experimental__runtimeEnv: {}, // Only required for client variables
   emptyStringAsUndefined: true,
   skipValidation: process.env.GITHUB_ACTIONS === "true",
 });

@@ -1,13 +1,8 @@
-import {
-  AutoComplete,
-  Prettify,
-  Result,
-  tryCatch,
-  Unpromisify,
-} from "~/lib/utils";
+import { AutoComplete, Prettify, Unpromisify } from "~/lib/utils";
 
 import { z } from "zod";
 import { ErrorWithCause } from "../errors";
+import { Result, tryCatch } from "../tryCatch";
 import githubProvider from "./github";
 import { CustomForkSchema, ForkResponseSchema } from "./github/schema";
 
@@ -34,7 +29,6 @@ export type ForkResponse = z.infer<typeof ForkResponseSchema>;
 
 type ProviderStruct = {
   getForks: (args: FetchArgs) => Promise<ForkResponse>;
-  search: (query?: FetchArgs["repo"]) => Promise<Fork[]>;
   schemas: Record<string, z.ZodSchema>;
 };
 
@@ -46,15 +40,6 @@ export const API: Prettify<CommonProvider<Omit<ProviderStruct, "schemas">>> = {
   getForks: async (provider: ProviderName, args: FetchArgs) => {
     "use server";
     const response = await tryCatch(providers[provider].getForks(args));
-    if (!response.error) {
-      return { data: response.data, error: null };
-    } else {
-      return { data: null, error: ErrorWithCause.from(response.error) };
-    }
-  },
-  search: async (provider: ProviderName, query?: FetchArgs["repo"]) => {
-    "use server";
-    const response = await tryCatch(providers[provider].search(query));
     if (!response.error) {
       return { data: response.data, error: null };
     } else {

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { repoPattern } from "~/lib/utils";
+import { repoPattern } from "~/lib/singletons/regex";
 
 const UserSchema = z.object({
   name: z.string().nullable().optional(),

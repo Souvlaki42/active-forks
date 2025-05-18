@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { env } from "~/lib/env";
 import { ErrorWithCause } from "~/lib/errors";
-import { getOctokit, getRedis, repoPattern } from "~/lib/utils";
+import { octokit } from "~/lib/singletons/octokit";
+import { redis } from "~/lib/singletons/redis";
+import { repoPattern } from "~/lib/singletons/regex";
 import { FetchArgs, ForkResponse } from "../common";
 import { APIForkSchema, ForkResponseSchema } from "./schema";
-import search from "./search";
 
 const forks = async ({
   repo,
@@ -18,8 +19,6 @@ const forks = async ({
     );
 
   const fullRepo = repo.join("/");
-
-  const redis = getRedis();
 
   if (!repoPattern.test(fullRepo)) {
     throw new ErrorWithCause(
@@ -39,8 +38,6 @@ const forks = async ({
     return ForkResponseSchema.parse(parsed);
   }
 
-  const octokit = getOctokit();
-
   const forkResponse = await octokit.rest.repos.listForks({
     owner,
     repo: name,
@@ -49,10 +46,13 @@ const forks = async ({
     sort: "stargazers",
   });
 
-  // TODO: Maybe we can deduplicate these checks for query's validity
-  const reposFound = await search(repo);
+  const searchResponse = await octokit.rest.search.repos({
+    q: fullRepo,
+  });
 
-  const total = reposFound[0].forks;
+  const searchResults = z.array(APIForkSchema).parse(searchResponse.data.items);
+
+  const total = searchResults[0].forks ?? 0;
 
   const forks = z.array(APIForkSchema).parse(forkResponse.data);
 
