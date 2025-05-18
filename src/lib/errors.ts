@@ -1,6 +1,6 @@
 import { RequestError } from "octokit";
 import { z } from "zod";
-import { AutoComplete } from "./utils";
+import type { AutoComplete } from "./utils";
 
 type CauseType =
   | "INVALID_REPO"

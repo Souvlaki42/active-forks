@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { CardLayout } from "~/components/card-layout";
 import { ForksTable } from "~/components/forks-table/table";
 import { RepoSearchForm } from "~/components/repo-search";
-import { API, FetchArgs } from "~/lib/providers/common";
+import { API, type FetchArgs } from "~/lib/providers/common";
 
 export default async function Repo({
   params,

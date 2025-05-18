@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
 import { useTableSearchParams } from "tanstack-table-search-params";
-import { ForkResponse } from "~/lib/providers/common";
+import type { ForkResponse } from "~/lib/providers/common";
 import { fuzzyFilter } from "~/lib/utils";
 import { Input } from "../ui/input";
 import {

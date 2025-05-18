@@ -4,7 +4,7 @@ import { ErrorWithCause } from "~/lib/errors";
 import { octokit } from "~/lib/singletons/octokit";
 import { redis } from "~/lib/singletons/redis";
 import { repoPattern } from "~/lib/singletons/regex";
-import { FetchArgs, ForkResponse } from "../common";
+import type { FetchArgs, ForkResponse } from "../common";
 import { APIForkSchema, ForkResponseSchema } from "./schema";
 
 const forks = async ({

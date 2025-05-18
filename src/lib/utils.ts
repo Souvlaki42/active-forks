@@ -1,8 +1,8 @@
 import { rankItem } from "@tanstack/match-sorter-utils";
-import { FilterFn } from "@tanstack/react-table";
+import type { FilterFn } from "@tanstack/react-table";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Fork } from "./providers/common";
+import type { Fork } from "./providers/common";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

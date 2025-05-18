@@ -1,8 +1,8 @@
-import { AutoComplete, Prettify, Unpromisify } from "~/lib/utils";
+import type { AutoComplete, Prettify, Unpromisify } from "~/lib/utils";
 
 import { z } from "zod";
 import { ErrorWithCause } from "../errors";
-import { Result, tryCatch } from "../tryCatch";
+import { type Result, tryCatch } from "../tryCatch";
 import githubProvider from "./github";
 import { CustomForkSchema, ForkResponseSchema } from "./github/schema";
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FC } from "react";
+import type { FC } from "react";
 import { cn } from "~/lib/utils";
 import { ModeToggle } from "./mode-toggle";
 import { Card } from "./ui/card";
