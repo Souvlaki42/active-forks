@@ -11,14 +11,18 @@ export const columns: ColumnDef<Fork>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => <ForkHeader column={column} title="Repo" />,
-    cell: ({ row: { original: row } }) => {
+    cell: ({
+      row: {
+        original: { link, name },
+      },
+    }) => {
       return (
         <Link
-          href={row.link}
+          href={link}
           target="_blank"
           className="text-blue-500 hover:underline"
         >
-          {row.name}
+          {name}
         </Link>
       );
     },
@@ -26,21 +30,25 @@ export const columns: ColumnDef<Fork>[] = [
   {
     accessorKey: "owner",
     header: ({ column }) => <ForkHeader column={column} title="Owner" />,
-    cell: ({ row: { original: row } }) => {
+    cell: ({
+      row: {
+        original: { owner, avatar },
+      },
+    }) => {
       return (
         <Link
-          href={`https://github.com/${row.owner}`}
+          href={`https://github.com/${owner}`}
           target="_blank"
           className="flex items-center gap-2 text-blue-500 hover:underline"
         >
           <Image
-            src={row.avatar}
-            alt={row.owner}
+            src={avatar}
+            alt={owner}
             className="rounded-full"
             width={32}
             height={32}
           />
-          {row.owner}
+          {owner}
         </Link>
       );
     },
@@ -68,17 +76,17 @@ export const columns: ColumnDef<Fork>[] = [
     header: ({ column }) => <ForkHeader column={column} title="Open Issues" />,
   },
   {
-    accessorKey: "size",
+    id: "size",
+    accessorFn: (row) => `${(row.size / 1024).toFixed(2)} MB`,
     header: ({ column }) => <ForkHeader column={column} title="Size" />,
-    cell: ({ row: { original: row } }) => {
-      return `${(row.size / 1024).toFixed(2)} MB`;
-    },
   },
   {
-    accessorKey: "lastPush",
+    id: "lastPush",
+    accessorFn: (row) =>
+      row.lastPush ? new Date(row.lastPush).toLocaleDateString() : "No date",
     header: ({ column }) => <ForkHeader column={column} title="Last Push" />,
-    cell: ({ row: { original: row } }) => {
-      return <ClientDate date={row.lastPush} />;
+    cell: ({ row }) => {
+      return <ClientDate date={row.original.lastPush} />;
     },
   },
 ];
