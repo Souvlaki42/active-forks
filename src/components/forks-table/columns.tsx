@@ -1,9 +1,10 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import { type ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
-import { Fork } from "~/lib/providers/common";
+import { type Fork } from "~/lib/providers/common";
+import { howLongAgo } from "~/lib/singletons/rtf";
 import ClientDate from "../date";
 import { ForkHeader } from "./header";
 
@@ -82,8 +83,7 @@ export const columns: ColumnDef<Fork>[] = [
   },
   {
     id: "lastPush",
-    accessorFn: (row) =>
-      row.lastPush ? new Date(row.lastPush).toLocaleDateString() : "No date",
+    accessorFn: (row) => howLongAgo(row.lastPush),
     header: ({ column }) => <ForkHeader column={column} title="Last Push" />,
     cell: ({ row }) => {
       return <ClientDate date={row.original.lastPush} />;
