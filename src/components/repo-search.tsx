@@ -2,7 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
@@ -20,6 +21,7 @@ import { RepoSearchSchema } from "~/lib/providers/github/schema";
 export function RepoSearchForm() {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const form = useForm<z.infer<typeof RepoSearchSchema>>({
     resolver: zodResolver(RepoSearchSchema),
@@ -31,7 +33,7 @@ export function RepoSearchForm() {
   const onSubmit: SubmitHandler<z.infer<typeof RepoSearchSchema>> = (
     values
   ) => {
-    router.push(`/${values.repo}`);
+    router.push(`/${values.repo}?${searchParams.toString()}`);
   };
 
   return (
