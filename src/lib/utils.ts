@@ -1,6 +1,7 @@
 import { rankItem } from "@tanstack/match-sorter-utils";
 import type { FilterFn } from "@tanstack/react-table";
 import { clsx, type ClassValue } from "clsx";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 import type { Fork } from "./providers/common";
 
@@ -21,3 +22,8 @@ export const fuzzyFilter: FilterFn<Fork> = (row, columnId, value, addMeta) => {
 };
 
 export type Unpromisify<T> = T extends Promise<infer U> ? U : T;
+
+export const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text);
+  toast.success("Copied to clipboard!");
+};

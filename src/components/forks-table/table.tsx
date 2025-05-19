@@ -13,6 +13,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { useTableSearchParams } from "tanstack-table-search-params";
 import type { ForkResponse } from "~/lib/providers/common";
 import { fuzzyFilter } from "~/lib/utils";
+import { Toolbar } from "../toolbar";
 import { Input } from "../ui/input";
 import {
   Table,
@@ -80,12 +81,13 @@ export function ForksTable({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter forks..."
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
+        <Toolbar pathName={pathname} />
       </div>
       <div className="rounded-md border">
         <Table>
