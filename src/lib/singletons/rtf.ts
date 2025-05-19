@@ -1,19 +1,18 @@
+let __rtfCache: Map<Intl.LocalesArgument, Intl.RelativeTimeFormat> | undefined;
+
 function getRtf(locale?: Intl.LocalesArgument): Intl.RelativeTimeFormat {
-  if (!__rtfCache && process.env.NODE_ENV !== "production") {
+  if (!__rtfCache) {
     __rtfCache = new Map<Intl.LocalesArgument, Intl.RelativeTimeFormat>();
   }
 
-  const rtfCache =
-    __rtfCache ?? new Map<Intl.LocalesArgument, Intl.RelativeTimeFormat>();
-
-  let rtf = rtfCache.get(locale);
+  let rtf = __rtfCache.get(locale);
 
   if (!rtf) {
     rtf = new Intl.RelativeTimeFormat(locale, {
       style: "long",
       numeric: "auto",
     });
-    rtfCache.set(locale, rtf);
+    __rtfCache.set(locale, rtf);
   }
   return rtf;
 }

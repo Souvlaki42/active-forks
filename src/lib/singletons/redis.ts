@@ -1,9 +1,8 @@
 import { Redis } from "@upstash/redis";
 
+let __redisClient: Redis | undefined;
+
 const getRedis = () => {
-  if (process.env.NODE_ENV === "production") {
-    return Redis.fromEnv();
-  }
   if (!__redisClient) {
     __redisClient = Redis.fromEnv();
   }
