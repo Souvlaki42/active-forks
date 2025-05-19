@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { env } from "~/lib/env";
-import { ErrorWithCause } from "~/lib/errors";
+import { CustomError } from "~/lib/errors";
 import { octokit } from "~/lib/singletons/octokit";
 import { redis } from "~/lib/singletons/redis";
 import { repoPattern } from "~/lib/singletons/regex";
@@ -12,16 +12,12 @@ const forks = async ({
   page = 1,
   per_page = 30,
 }: FetchArgs): Promise<ForkResponse> => {
-  if (!repo)
-    throw new ErrorWithCause(
-      "You haven't selected a repo yet!",
-      "INVALID_REPO"
-    );
+  if (!repo) return { total: 0, forks: [] };
 
   const fullRepo = repo.join("/");
 
   if (!repoPattern.test(fullRepo)) {
-    throw new ErrorWithCause(
+    throw new CustomError(
       "Invalid repo format! Please select a valid repo.",
       "INVALID_REPO"
     );

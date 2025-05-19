@@ -9,7 +9,7 @@ export default async function Repo({
   params,
   searchParams,
 }: {
-  params: Promise<{ repo: string[] }>;
+  params: Promise<{ repo?: string[] }>;
   searchParams: Promise<Omit<FetchArgs, "repo">>;
 }) {
   const { repo } = await params;

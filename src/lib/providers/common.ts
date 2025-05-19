@@ -1,8 +1,7 @@
 import type { AutoComplete, Prettify, Unpromisify } from "~/lib/utils";
 
 import { z } from "zod";
-import { ErrorWithCause } from "../errors";
-import { type Result, tryCatch } from "../tryCatch";
+import { CustomError, tryCatch, type Result } from "../errors";
 import githubProvider from "./github";
 import { CustomForkSchema, ForkResponseSchema } from "./github/schema";
 
@@ -21,7 +20,7 @@ type CommonProvider<T> = {
     ? (
         provider: ProviderName,
         ...args: Args
-      ) => Promise<Result<Unpromisify<ReturnType>, ErrorWithCause>>
+      ) => Promise<Result<Unpromisify<ReturnType>, CustomError>>
     : T[K];
 };
 
@@ -43,7 +42,7 @@ export const API: Prettify<CommonProvider<Omit<ProviderStruct, "schemas">>> = {
     if (!response.error) {
       return { data: response.data, error: null };
     } else {
-      return { data: null, error: ErrorWithCause.from(response.error) };
+      return { data: null, error: CustomError.from(response.error) };
     }
   },
 };
