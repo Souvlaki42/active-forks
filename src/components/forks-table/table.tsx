@@ -7,13 +7,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
+import { CopyIcon, Loader2 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
 import { useTableSearchParams } from "tanstack-table-search-params";
 import type { ForkResponse } from "~/lib/providers/common";
-import { fuzzyFilter } from "~/lib/utils";
-import { Toolbar } from "../toolbar";
+import { copyToClipboard, fuzzyFilter } from "~/lib/utils";
+import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import {
   Table,
@@ -35,11 +35,11 @@ export function ForksTable({
 }) {
   const { replace } = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const pathName = usePathname();
 
   const stateAndOnChanges = useTableSearchParams(
     {
-      pathname,
+      pathname: pathName,
       query: searchParams,
       replace,
     },
@@ -87,7 +87,17 @@ export function ForksTable({
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
-        <Toolbar pathName={pathname} />
+        <Button
+          variant={"secondary"}
+          onClick={() =>
+            copyToClipboard(
+              `Find active forks for ${pathName === "/" ? "a git repo" : pathName.substring(1)}: ${window.location.origin}${pathName}`
+            )
+          }
+        >
+          <CopyIcon className="h-4 w-4" />
+          <span className="sr-only">Copy</span>
+        </Button>
       </div>
       <div className="rounded-md border">
         <Table>
