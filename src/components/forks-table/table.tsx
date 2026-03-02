@@ -11,7 +11,7 @@ import { CopyIcon, Loader2 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
 import { useTableSearchParams } from "tanstack-table-search-params";
-import type { ForkResponse } from "~/lib/providers/common";
+import type { ForkList } from "~/lib/github/schema";
 import { copyToClipboard, fuzzyFilter } from "~/lib/utils";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -25,12 +25,11 @@ import {
 } from "../ui/table";
 import { columns } from "./columns";
 import { PaginationControls } from "./pagination";
-
 export function ForksTable({
   data = { forks: [], total: 0 },
   loading = false,
 }: {
-  data?: ForkResponse;
+  data?: ForkList;
   loading?: boolean;
 }) {
   const { replace } = useRouter();
@@ -87,17 +86,6 @@ export function ForksTable({
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
-        <Button
-          variant={"secondary"}
-          onClick={() =>
-            copyToClipboard(
-              `Find active forks for ${pathName === "/" ? "a git repo" : pathName.substring(1)}: ${window.location.origin}${pathName}`
-            )
-          }
-        >
-          <CopyIcon className="h-4 w-4" />
-          <span className="sr-only">Copy</span>
-        </Button>
       </div>
       <div className="rounded-md border">
         <Table>

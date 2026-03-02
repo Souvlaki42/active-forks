@@ -3,7 +3,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
-import { type Fork } from "~/lib/providers/common";
+import type { Fork } from "~/lib/github/schema";
 import { howLongAgo } from "~/lib/singletons/rtf";
 import ClientDate from "../date";
 import { ForkHeader } from "./header";
@@ -78,7 +78,7 @@ export const columns: ColumnDef<Fork>[] = [
   },
   {
     id: "size",
-    accessorFn: (row) => `${(row.size / 1024).toFixed(2)} MB`,
+    accessorFn: (row) => `${(row.size ?? 0 / 1024).toFixed(2)} MB`,
     header: ({ column }) => <ForkHeader column={column} title="Size" />,
   },
   {

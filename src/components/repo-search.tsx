@@ -16,7 +16,11 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { RepoSearchSchema } from "~/lib/providers/github/schema";
+import { RepoSchema } from "~/lib/github/schema";
+
+const RepoSearchSchema = z.object({
+  repo: RepoSchema,
+});
 
 export function RepoSearchForm() {
   const pathname = usePathname();
