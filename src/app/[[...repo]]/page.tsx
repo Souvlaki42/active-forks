@@ -3,25 +3,29 @@ import { Suspense } from "react";
 import { CardLayout } from "~/components/card-layout";
 import { ForksTable } from "~/components/forks-table/table";
 import { RepoSearchForm } from "~/components/repo-search";
-import { API, type FetchArgs } from "~/lib/providers/common";
+import { getForks } from "~/lib/github/forks";
+import type { ForkFetchArgs } from "~/lib/github/schema";
+import { tryCatch } from "~/lib/utils";
 
 export default async function Repo({
   params,
   searchParams,
 }: {
   params: Promise<{ repo?: string[] }>;
-  searchParams: Promise<Omit<FetchArgs, "repo">>;
+  searchParams: Promise<Omit<ForkFetchArgs, "repo">>;
 }) {
   const { repo } = await params;
   const { page = 1, per_page = 30 } = await searchParams;
 
-  const { data, error } = await API.getForks("github", {
-    page,
-    per_page,
-    repo,
-  });
+  const { data, error } = await tryCatch(
+    getForks({
+      page: Number(page),
+      per_page,
+      repo: repo?.join("/"),
+    })
+  );
 
-  if (error?.cause === "REPO_NOT_FOUND") notFound();
+  if (error?.message.includes("Not Found")) notFound();
 
   if (error) throw error;
 
