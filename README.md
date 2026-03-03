@@ -19,7 +19,6 @@ This might be outdated, but it's the best I could do.
 
 - [Next.js](https://nextjs.org/) framework
 - GitHub REST API using the [Octokit](https://github.com/octokit/octokit.js) library
-- [Redis](https://redis.io/) database through [Upstash](https://upstash.com/) for caching API responses
 - [Tailwind CSS](https://tailwindcss.com/) framework
 - [Shadcn UI](https://shadcn.com/) components
 - [Tweakcn](https://tweakcn.com/) to customize the Shadcn UI components
@@ -44,15 +43,6 @@ yarn install
 # or
 npm install
 ```
-
-### Redis
-
-You need to have a Redis instance running locally. You can use [Upstash](https://upstash.com/) to get a free Redis instance.
-
-Once you have a Redis instance running, you need to set the `UPSTASH_REDIS_REST_URL` environment variable to the Redis URL and the `UPSTASH_REDIS_REST_TOKEN` environment variable to the Redis token.
-
-> [!NOTE]
-> You can also set the `UPSTASH_REDIS_CACHE_TTL_SECONDS` environment variable to change the cache TTL (time to live) in seconds. The default value is 24 hours.
 
 ### GitHub API
 
