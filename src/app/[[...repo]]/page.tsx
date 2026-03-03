@@ -22,7 +22,7 @@ export default async function Repo({
       page: Number(page),
       per_page,
       repo: repo?.join("/"),
-    })
+    }),
   );
 
   if (error?.message.includes("Not Found")) notFound();

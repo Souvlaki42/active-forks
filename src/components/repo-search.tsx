@@ -35,7 +35,7 @@ export function RepoSearchForm() {
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof RepoSearchSchema>> = (
-    values
+    values,
   ) => {
     router.push(`/${values.repo}?${searchParams.toString()}`);
   };

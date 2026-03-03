@@ -19,7 +19,7 @@ function getRtf(locale?: Intl.LocalesArgument): Intl.RelativeTimeFormat {
 
 export function howLongAgo(
   dateStr?: string | null,
-  locale: string = navigator.language
+  locale: string = navigator.language,
 ): string {
   if (!dateStr) return "Unknown";
   const date = new Date(dateStr);

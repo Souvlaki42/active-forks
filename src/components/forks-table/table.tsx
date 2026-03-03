@@ -61,7 +61,7 @@ export function ForksTable({
         },
         sorting: [{ id: "stars", desc: true }],
       },
-    }
+    },
   );
 
   const table = useReactTable({
@@ -99,7 +99,7 @@ export function ForksTable({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -126,7 +126,7 @@ export function ForksTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
