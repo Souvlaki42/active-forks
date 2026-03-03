@@ -7,13 +7,12 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { CopyIcon, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
 import { useTableSearchParams } from "tanstack-table-search-params";
 import type { ForkList } from "~/lib/github/schema";
-import { copyToClipboard, fuzzyFilter } from "~/lib/utils";
-import { Button } from "../ui/button";
+import { fuzzyFilter } from "~/lib/utils";
 import { Input } from "../ui/input";
 import {
   Table,
