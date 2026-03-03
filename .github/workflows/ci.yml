@@ -36,5 +36,5 @@ jobs:
       - name: Check code formatting
         run: pnpm format
 
-      - name: Lint with ESLint
+      - name: Lint with Biome
         run: pnpm lint
