@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { perPageOptions } from "~/lib/utils";
 
 export function PaginationControls<TData>({
   table,
@@ -45,7 +46,7 @@ export function PaginationControls<TData>({
               <SelectValue placeholder={pageSize.toString()} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 30, 50, 100].map((size) => (
+              {perPageOptions.map((size) => (
                 <SelectItem key={size} value={size.toString()}>
                   {size}
                 </SelectItem>
