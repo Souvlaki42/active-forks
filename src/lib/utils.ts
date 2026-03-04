@@ -3,7 +3,6 @@ import type { FilterFn } from "@tanstack/react-table";
 import { type ClassValue, clsx } from "clsx";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
-import { z, type util as zutil } from "zod";
 import type { Fork } from "./github/schema";
 
 export function cn(...inputs: ClassValue[]) {
@@ -28,11 +27,6 @@ export const fuzzyFilter: FilterFn<Fork> = (row, columnId, value, addMeta) => {
   addMeta({ itemRank });
   return itemRank.passed;
 };
-
-export const zodUnionFromArray = <T extends zutil.Literal>(
-  array: readonly T[],
-  initial: zutil.NoUndefined<T>,
-) => z.union(array.map((item) => z.literal(item))).default(initial);
 
 type Success<T> = {
   data: T;
@@ -59,5 +53,3 @@ export async function tryCatch<T, E = Error>(
 }
 
 export const repoPattern = /^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/;
-
-export const perPageOptions = [10, 30, 50, 70, 100] as const;

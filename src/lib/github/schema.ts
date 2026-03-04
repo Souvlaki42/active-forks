@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { perPageOptions, repoPattern, zodUnionFromArray } from "~/lib/utils";
+import { repoPattern } from "~/lib/utils";
 
 export const ForkSchema = z.object({
   link: z.string(),
@@ -34,7 +34,7 @@ export type Repo = z.infer<typeof RepoSchema>;
 export const ForkFetchArgsSchema = z.object({
   repo: RepoSchema,
   page: z.number().default(1),
-  per_page: zodUnionFromArray(perPageOptions, 30),
+  per_page: z.number().min(0).max(100).default(30),
 });
 export type ForkFetchArgs = z.infer<typeof ForkFetchArgsSchema>;
 

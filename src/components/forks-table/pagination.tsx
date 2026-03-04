@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { perPageOptions } from "~/lib/utils";
 
 export function PaginationControls<TData>({
   table,

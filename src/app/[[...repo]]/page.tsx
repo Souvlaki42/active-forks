@@ -4,7 +4,6 @@ import { CardLayout } from "~/components/card-layout";
 import { ForksTable } from "~/components/forks-table/table";
 import { RepoSearchForm } from "~/components/repo-search";
 import { getForks } from "~/lib/github/forks";
-import type { ForkFetchArgs } from "~/lib/github/schema";
 import { tryCatch } from "~/lib/utils";
 
 export default async function Repo({
@@ -12,7 +11,7 @@ export default async function Repo({
   searchParams,
 }: {
   params: Promise<{ repo?: string[] }>;
-  searchParams: Promise<Omit<ForkFetchArgs, "repo">>;
+  searchParams: Promise<{ page?: string; per_page?: string }>;
 }) {
   const { repo } = await params;
   const { page = 1, per_page = 30 } = await searchParams;
