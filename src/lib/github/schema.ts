@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { repoPattern } from "../utils";
+import { repoPattern } from "~/lib/utils";
 
 export const ForkSchema = z.object({
   link: z.string(),

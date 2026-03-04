@@ -1,5 +1,5 @@
 import { Octokit } from "octokit";
-import { env } from "../env";
+import { env } from "~/lib/env";
 
 let __octokitClient: Octokit | undefined;
 
