@@ -16,7 +16,7 @@ export const getForks = async (args: ForkFetchArgs): Promise<ForkList> => {
 
   const [owner, name] = partRepo;
 
-  const forkResponse = await octokit.rest.repos.listForks({
+  const forkRequest = octokit.rest.repos.listForks({
     owner,
     repo: name,
     page,
@@ -24,16 +24,14 @@ export const getForks = async (args: ForkFetchArgs): Promise<ForkList> => {
     sort: "stargazers",
   });
 
-  const searchResponse = await octokit.rest.search.repos({
-    q: repo,
-  });
+  const getRequest = octokit.rest.repos.get({ owner, repo: name });
 
-  const total = searchResponse.data.items[0].forks ?? 0;
+  const APIResponse = await Promise.all([forkRequest, getRequest]);
 
-  const { data: forks } = forkResponse;
+  const forks = APIResponse[0].data;
 
   const response: ForkList = {
-    total,
+    total: APIResponse[1].data.forks_count ?? 0,
     forks: forks.map((fork) => {
       return {
         link: fork.html_url,
