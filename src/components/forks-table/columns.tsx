@@ -78,7 +78,7 @@ export const columns: ColumnDef<Fork>[] = [
   },
   {
     id: "size",
-    accessorFn: (row) => `${(row.size ?? 0 / 1024).toFixed(2)} MB`,
+    accessorFn: (row) => `${((row.size ?? 0) / 1024).toFixed(2)} MB`,
     header: ({ column }) => <ForkHeader column={column} title="Size" />,
   },
   {
