@@ -12,7 +12,7 @@ A app that shows the active forks of a GitHub repository.
 - View forks on Bitbucket (might come soon)
 - View forks on Gitea (might come soon)
 
-![Screenshot of the app](public/screenshot.png)
+![Screenshot of the app](screenshots/current.png)
 This might be outdated, but it's the best I could do.
 
 ## Technologies
