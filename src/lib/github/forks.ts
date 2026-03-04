@@ -6,7 +6,8 @@ import {
 } from "./schema";
 
 export const getForks = async (args: ForkFetchArgs): Promise<ForkList> => {
-  console.log("getForks", args);
+  console.info(`Fetching forks: ${JSON.stringify(args)}`);
+
   const { repo, page, per_page } = ForkFetchArgsSchema.parse(args);
 
   if (!repo) return { total: 0, forks: [] };
