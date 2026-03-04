@@ -1,8 +1,6 @@
-"use client";
-
+import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
-import Link from "next/link";
+import { Image } from "@unpic/react";
 import type { Fork } from "~/lib/github/schema";
 import { howLongAgo } from "~/lib/singletons/rtf";
 import ClientDate from "../date";
@@ -19,7 +17,7 @@ export const columns: ColumnDef<Fork>[] = [
     }) => {
       return (
         <Link
-          href={link}
+          to={link}
           target="_blank"
           className="text-blue-500 hover:underline"
         >
@@ -38,7 +36,7 @@ export const columns: ColumnDef<Fork>[] = [
     }) => {
       return (
         <Link
-          href={`https://github.com/${owner}`}
+          to={`https://github.com/${owner}`}
           target="_blank"
           className="flex items-center gap-2 text-blue-500 hover:underline"
         >
@@ -78,7 +76,7 @@ export const columns: ColumnDef<Fork>[] = [
   },
   {
     id: "size",
-    accessorFn: (row) => `${(row.size ?? 0 / 1024).toFixed(2)} MB`,
+    accessorFn: (row) => `${((row.size ?? 0) / 1024).toFixed(2)} MB`,
     header: ({ column }) => <ForkHeader column={column} title="Size" />,
   },
   {

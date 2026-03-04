@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import type { FC } from "react";
 import { cn } from "~/lib/utils";
 import { ModeToggle } from "./mode-toggle";
@@ -32,7 +32,7 @@ export const CardLayout: FC<CardLayoutProps> = ({
       <Card className={`mx-auto max-w-[${maxWidth}px]`}>
         <div className={cn("p-6", className)}>
           <header className="mb-6 flex items-center justify-between">
-            <Link href={"/"} className="flex items-center gap-2">
+            <Link to={"/"} className="flex items-center gap-2">
               <GithubIcon />
               <h1 className="text-2xl font-semibold select-none">
                 Active Forks
