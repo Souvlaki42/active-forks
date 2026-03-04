@@ -45,11 +45,13 @@ export function PaginationControls<TData>({
               <SelectValue placeholder={pageSize.toString()} />
             </SelectTrigger>
             <SelectContent side="top">
-              {perPageOptions.map((size) => (
-                <SelectItem key={size} value={size.toString()}>
-                  {size}
-                </SelectItem>
-              ))}
+              {[...new Set([10, 30, 50, 70, 100, pageSize])]
+                .toSorted()
+                .map((size) => (
+                  <SelectItem key={size} value={size.toString()}>
+                    {size}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
         </div>
