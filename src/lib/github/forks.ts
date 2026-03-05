@@ -1,9 +1,9 @@
 import { Octokit } from "octokit";
 import z from "zod";
 import { env } from "~/lib/env";
+import { cachedFetch } from "../utils";
 import { type Fork, type Repo, RepoSchema } from "./schema";
 
-const REVALIDATE_MINUTES = 5;
 const MAX_DEPTH = 10;
 
 export const getForks = async (args: {
@@ -22,16 +22,7 @@ export const getForks = async (args: {
     auth: env.GITHUB_API_TOKEN,
     request: {
       fetch: (url: string, options: RequestInit) =>
-        env.NODE_ENV === "development"
-          ? fetch(url, { ...options, cache: "no-store" })
-          : // WARNING: Data caching here only works when I use Vercel's infrastructure
-            fetch(url, {
-              ...options,
-              next: {
-                revalidate: REVALIDATE_MINUTES * 60,
-                tags: [`forks:${owner}/${name}`],
-              },
-            }),
+        cachedFetch(url, options, [`forks:${owner}/${name}`]),
     },
   });
 
