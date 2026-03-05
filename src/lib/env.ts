@@ -3,10 +3,8 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    GITHUB_API_TOKEN: z
-      .string()
-      .describe("GitHub API token")
-      .min(1, "GitHub token is required"),
+    GITHUB_API_TOKEN: z.string().min(1, "GitHub token is required"),
+    NODE_ENV: z.enum(["development", "production", "test"]),
   },
   client: {},
   experimental__runtimeEnv: {}, // Only required for client variables
