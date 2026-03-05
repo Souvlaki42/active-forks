@@ -2,12 +2,10 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { ThemeProvider } from "~/components/theme-provider";
-import { Toaster } from "~/components/ui/sonner";
 import "./globals.css";
 
 const mainFont = DM_Sans({
   subsets: ["latin"],
-  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -29,9 +27,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NextTopLoader color="var(--primary)" shadow={false} />
+          <NextTopLoader color="var(--primary)" />
           {children}
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>
