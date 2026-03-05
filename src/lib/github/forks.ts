@@ -1,20 +1,20 @@
 import { Octokit } from "octokit";
-
+import z from "zod";
 import { env } from "~/lib/env";
-import {
-  type ForkFetchArgs,
-  ForkFetchArgsSchema,
-  type ForkList,
-} from "./schema";
+import { type Fork, type Repo, RepoSchema } from "./schema";
 
 const REVALIDATE_MINUTES = 5;
+const MAX_DEPTH = 10;
 
-export const getForks = async (args: ForkFetchArgs): Promise<ForkList> => {
-  console.info(`Fetching forks: ${JSON.stringify(args)}`);
-
-  const { repo, page, per_page } = ForkFetchArgsSchema.parse(args);
-
-  if (!repo) return { total: 0, forks: [] };
+export const getForks = async (args: {
+  repo: Repo;
+  depth?: number;
+}): Promise<Fork[]> => {
+  const { repo, depth } = z
+    .object({ repo: RepoSchema, depth: z.number().default(0) })
+    .parse(args);
+  if (!repo) return [];
+  if (depth > MAX_DEPTH) return [];
 
   const [owner, name] = repo.split("/");
 
@@ -22,47 +22,51 @@ export const getForks = async (args: ForkFetchArgs): Promise<ForkList> => {
     auth: env.GITHUB_API_TOKEN,
     request: {
       fetch: (url: string, options: RequestInit) =>
-        // WARNING: Data caching here only works when I use Vercel's infrastructure
-        fetch(url, {
-          ...options,
-          next: {
-            revalidate: REVALIDATE_MINUTES * 60,
-            tags: [`forks:${owner}/${name}`],
-          },
-        }),
+        env.NODE_ENV === "development"
+          ? fetch(url, { ...options, cache: "no-store" })
+          : // WARNING: Data caching here only works when I use Vercel's infrastructure
+            fetch(url, {
+              ...options,
+              next: {
+                revalidate: REVALIDATE_MINUTES * 60,
+                tags: [`forks:${owner}/${name}`],
+              },
+            }),
     },
   });
 
-  const forkRequest = octokit.rest.repos.listForks({
+  const response = await octokit.paginate(octokit.rest.repos.listForks, {
     owner,
     repo: name,
-    page,
-    per_page,
-    sort: "stargazers",
+    per_page: 100,
   });
 
-  const getRequest = octokit.rest.repos.get({ owner, repo: name });
+  const forksOfForks: typeof response = [];
 
-  const APIResponse = await Promise.all([forkRequest, getRequest]);
+  let data = response.map((fork) => {
+    if (fork.forks !== 0) {
+      forksOfForks.push(fork);
+    }
 
-  const response: ForkList = {
-    total: APIResponse[1].data.forks_count ?? 0,
-    forks: APIResponse[0].data.map((fork) => {
-      return {
-        link: fork.html_url,
-        name: fork.name,
-        branch: fork.default_branch ?? "not available",
-        forks: fork.forks ?? 0,
-        owner: fork.owner.login,
-        avatar: fork.owner.avatar_url,
-        stars: fork.stargazers_count ?? 0,
-        size: fork.size ?? 0,
-        watchers: fork.watchers_count ?? 0,
-        openIssues: fork.open_issues_count ?? 0,
-        lastPush: fork.pushed_at,
-      };
-    }),
-  };
+    return {
+      link: fork.html_url,
+      name: fork.name,
+      branch: fork.default_branch ?? "not available",
+      forks: fork.forks ?? 0,
+      owner: fork.owner.login,
+      avatar: fork.owner.avatar_url,
+      stars: fork.stargazers_count ?? 0,
+      size: fork.size ?? 0,
+      watchers: fork.watchers_count ?? 0,
+      openIssues: fork.open_issues_count ?? 0,
+      lastPush: fork.pushed_at ?? "Unknown",
+    };
+  });
 
-  return response;
+  for (const fork of forksOfForks) {
+    const response = await getForks({ repo: fork.full_name, depth: depth + 1 });
+    data = [...data, ...response];
+  }
+
+  return data;
 };

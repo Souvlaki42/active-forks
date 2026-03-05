@@ -11,16 +11,10 @@ export const ForkSchema = z.object({
   watchers: z.number(),
   forks: z.number(),
   openIssues: z.number(),
-  size: z.number().optional(),
-  lastPush: z.string().nullable().optional(),
+  size: z.number(),
+  lastPush: z.string(),
 });
 export type Fork = z.infer<typeof ForkSchema>;
-
-export const ForkListSchema = z.object({
-  total: z.number(),
-  forks: z.array(ForkSchema),
-});
-export type ForkList = z.infer<typeof ForkListSchema>;
 
 export const RepoSchema = z
   .string()
@@ -30,13 +24,6 @@ export const RepoSchema = z
   .optional();
 
 export type Repo = z.infer<typeof RepoSchema>;
-
-export const ForkFetchArgsSchema = z.object({
-  repo: RepoSchema,
-  page: z.number().default(1),
-  per_page: z.number().min(0).max(100).default(30),
-});
-export type ForkFetchArgs = z.infer<typeof ForkFetchArgsSchema>;
 
 export const CompareArgsSchema = z.object({
   repo: RepoSchema,
