@@ -1,7 +1,7 @@
 "use client";
 
 import { type ComponentType, type ReactNode, useEffect, useState } from "react";
-import { howLongAgo } from "~/lib/singletons/rtf";
+import { howLongAgo } from "~/lib/rtf";
 
 function withClient<T extends Record<string, string | null | undefined>>(
   Comp: ComponentType<T>,

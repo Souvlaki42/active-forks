@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
 import type { Fork } from "~/lib/github/schema";
-import { howLongAgo } from "~/lib/singletons/rtf";
+import { howLongAgo } from "~/lib/rtf";
 import ClientDate from "../date";
 import { ForkHeader } from "./header";
 

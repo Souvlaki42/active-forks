@@ -1,22 +1,3 @@
-let __rtfCache: Map<Intl.LocalesArgument, Intl.RelativeTimeFormat> | undefined;
-
-function getRtf(locale?: Intl.LocalesArgument): Intl.RelativeTimeFormat {
-  if (!__rtfCache) {
-    __rtfCache = new Map<Intl.LocalesArgument, Intl.RelativeTimeFormat>();
-  }
-
-  let rtf = __rtfCache.get(locale);
-
-  if (!rtf) {
-    rtf = new Intl.RelativeTimeFormat(locale, {
-      style: "long",
-      numeric: "auto",
-    });
-    __rtfCache.set(locale, rtf);
-  }
-  return rtf;
-}
-
 export function howLongAgo(
   dateStr?: string | null,
   locale: string = navigator.language,
@@ -28,7 +9,11 @@ export function howLongAgo(
   const now = Date.now();
   const diffMs = date.getTime() - now;
   const absMs = Math.abs(diffMs);
-  const rtf = getRtf(locale);
+
+  const rtf = new Intl.RelativeTimeFormat(locale, {
+    style: "long",
+    numeric: "auto",
+  });
 
   const units: [Intl.RelativeTimeFormatUnit, number][] = [
     ["year", 1000 * 60 * 60 * 24 * 365.25],
