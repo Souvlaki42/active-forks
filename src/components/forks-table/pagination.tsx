@@ -46,7 +46,7 @@ export function PaginationControls<TData>({
             </SelectTrigger>
             <SelectContent side="top">
               {[...new Set([10, 30, 50, 70, 100, pageSize])]
-                .toSorted()
+                .toSorted((a, b) => a - b)
                 .map((size) => (
                   <SelectItem key={size} value={size.toString()}>
                     {size}
