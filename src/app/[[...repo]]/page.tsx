@@ -8,21 +8,12 @@ import { tryCatch } from "~/lib/utils";
 
 export default async function Repo({
   params,
-  searchParams,
 }: {
   params: Promise<{ repo?: string[] }>;
-  searchParams: Promise<{ page?: string; per_page?: string }>;
 }) {
   const { repo } = await params;
-  const { page = "1", per_page = "30" } = await searchParams;
 
-  const { data, error } = await tryCatch(
-    getForks({
-      page: parseInt(page, 10),
-      per_page: parseInt(per_page, 10),
-      repo: repo?.join("/"),
-    }),
-  );
+  const { data, error } = await tryCatch(getForks({ repo: repo?.join("/") }));
 
   if (error?.message.includes("Not Found")) notFound();
 
