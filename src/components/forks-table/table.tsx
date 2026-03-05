@@ -4,14 +4,20 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "nextjs-toploader/app";
-import { useTableSearchParams } from "tanstack-table-search-params";
-import type { ForkList } from "~/lib/github/schema";
+import {
+  parseAsBoolean,
+  parseAsInteger,
+  parseAsString,
+  parseAsStringEnum,
+  useQueryStates,
+} from "nuqs";
+import { useMemo } from "react";
+import type { Fork } from "~/lib/github/schema";
 import { fuzzyFilter } from "~/lib/utils";
 import { Input } from "../ui/input";
 import {
@@ -24,57 +30,108 @@ import {
 } from "../ui/table";
 import { columns } from "./columns";
 import { PaginationControls } from "./pagination";
+
 export function ForksTable({
-  data = { forks: [], total: 0 },
+  data = [],
   loading = false,
 }: {
-  data?: ForkList;
+  data?: Fork[];
   loading?: boolean;
 }) {
-  const { replace } = useRouter();
-  const searchParams = useSearchParams();
-  const pathName = usePathname();
-
-  const stateAndOnChanges = useTableSearchParams(
+  const [{ page, per_page }, setPagination] = useQueryStates(
     {
-      pathname: pathName,
-      query: searchParams,
-      replace,
+      page: parseAsInteger.withDefault(1),
+      per_page: parseAsInteger.withDefault(30),
     },
     {
-      paramNames: {
-        globalFilter: "q",
-        pagination: {
-          pageIndex: "page",
-          pageSize: "per_page",
-        },
-        sorting: (defaultParamName) => defaultParamName,
-        columnFilters: (defaultParamName) => defaultParamName,
-        columnOrder: (defaultParamName) => defaultParamName,
-        rowSelection: (defaultParamName) => defaultParamName,
-      },
-      defaultValues: {
-        pagination: {
-          pageIndex: 0,
-          pageSize: 30,
-        },
-        sorting: [{ id: "stars", desc: true }],
+      history: "push",
+      urlKeys: {
+        page: "page",
+        per_page: "per_page",
       },
     },
   );
 
+  const [{ sort_id, sort_desc }, setSorting] = useQueryStates(
+    {
+      sort_id: parseAsStringEnum([
+        "name",
+        "owner",
+        "branch",
+        "stars",
+        "forks",
+        "watchers",
+        "openIssues",
+        "size",
+        "lastPush",
+      ]).withDefault("stars"),
+      sort_desc: parseAsBoolean.withDefault(true),
+    },
+    {
+      urlKeys: {
+        sort_id: "sort",
+        sort_desc: "desc",
+      },
+    },
+  );
+
+  const [{ filter_query }, setGlobalFilter] = useQueryStates(
+    {
+      filter_query: parseAsString.withDefault(""),
+    },
+    {
+      urlKeys: {
+        filter_query: "q",
+      },
+    },
+  );
+
+  const sortingState = useMemo(
+    () => [{ id: sort_id, desc: sort_desc }],
+    [sort_id, sort_desc],
+  );
+
+  const paginationState = useMemo(
+    () => ({ pageIndex: page - 1, pageSize: per_page }),
+    [page, per_page],
+  );
+
   const table = useReactTable({
-    data: data?.forks ?? [],
+    data: data ?? [],
+    state: {
+      pagination: paginationState,
+      globalFilter: filter_query,
+      sorting: sortingState,
+    },
+    onPaginationChange: (updater) => {
+      const next =
+        typeof updater === "function"
+          ? updater({ pageIndex: page - 1, pageSize: per_page })
+          : updater;
+      setPagination({ page: next.pageIndex + 1, per_page: next.pageSize });
+    },
+    onSortingChange: (updater) => {
+      const next =
+        typeof updater === "function"
+          ? updater([{ id: sort_id, desc: sort_desc }])
+          : updater;
+      if (!next[0]) return;
+      setSorting({
+        sort_id: next[0].id as typeof sort_id,
+        sort_desc: next[0].desc,
+      });
+    },
+    onGlobalFilterChange: (updater) => {
+      const next =
+        typeof updater === "function" ? updater(filter_query) : updater;
+      setGlobalFilter({ filter_query: next });
+    },
     columns,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    manualPagination: true,
-    manualSorting: false,
-    enableSorting: data?.total !== 0,
-    rowCount: data?.total ?? 0,
-    ...stateAndOnChanges,
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
@@ -144,7 +201,7 @@ export function ForksTable({
           </TableBody>
         </Table>
       </div>
-      <PaginationControls table={table} total={data?.total ?? 0} />
+      <PaginationControls table={table} />
     </div>
   );
 }
