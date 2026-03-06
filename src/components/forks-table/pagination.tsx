@@ -23,14 +23,14 @@ export function PaginationControls<TData>({ table }: { table: Table<TData> }) {
   const end = Math.min(start + pageSize - 1, total);
 
   return (
-    <div className="flex items-center px-2 py-4">
-      <div className="text-muted-foreground flex-1 text-sm">
-        {total > 0 && `Showing ${start} to ${end} of ${total}`}
-        {total === 0 && "No results found"}
-      </div>
+    <div className="flex flex-col md:flex-row md:items-center justify-between p-4 gap-y-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 lg:gap-x-6 gap-y-2">
+        <div className="text-muted-foreground text-sm">
+          {total > 0 && `Showing ${start} to ${end} of ${total}`}
+          {total === 0 && "No results found"}
+        </div>
 
-      <div className="flex flex-wrap items-center gap-x-6 lg:gap-x-8 gap-y-2">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-x-2">
           <p className="text-sm font-medium hidden md:block">Rows per page</p>
           <Select
             value={pageSize.toString()}
@@ -50,13 +50,15 @@ export function PaginationControls<TData>({ table }: { table: Table<TData> }) {
             </SelectContent>
           </Select>
         </div>
+      </div>
 
+      <div className="flex flex-wrap items-center justify-between gap-x-6 lg:gap-x-8 gap-y-2">
         <div className="flex w-24 items-center justify-center text-sm font-medium">
           {total > 0 && `Page ${pageIndex + 1} of ${table.getPageCount()}`}
           {total === 0 && "Page 0 of 0"}
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-x-2">
           <Button
             variant="outline"
             className="hidden size-8 p-2 lg:flex"
