@@ -53,7 +53,10 @@ export function RepoSearchForm() {
             <FormItem className="flex-1">
               <FormLabel className="sr-only">Repo to search</FormLabel>
               <FormControl>
-                <Input placeholder="techgaun/active-forks" {...field} />
+                <Input
+                  placeholder='Find repository (e.g. "techgaun/active-forks")'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
