@@ -9,6 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
+import { notFound } from "next/navigation";
 import {
   parseAsBoolean,
   parseAsInteger,
@@ -16,9 +17,9 @@ import {
   parseAsStringEnum,
   useQueryStates,
 } from "nuqs";
-import { useMemo } from "react";
+import { use, useMemo } from "react";
 import type { Fork } from "~/lib/github/schema";
-import { fuzzyFilter } from "~/lib/utils";
+import { fuzzyFilter, type Result } from "~/lib/utils";
 import { Input } from "../ui/input";
 import {
   Table,
@@ -32,10 +33,10 @@ import { columns } from "./columns";
 import { PaginationControls } from "./pagination";
 
 export function ForksTable({
-  data = [],
+  promisedData,
   loading = false,
 }: {
-  data?: Fork[];
+  promisedData: Promise<Result<Fork[], Error>>;
   loading?: boolean;
 }) {
   const [{ page, per_page }, setPagination] = useQueryStates(
@@ -95,6 +96,13 @@ export function ForksTable({
     () => ({ pageIndex: page - 1, pageSize: per_page }),
     [page, per_page],
   );
+
+  const { data, error } = use(promisedData);
+
+  if (error) {
+    if (error.message.includes("Not Found")) notFound();
+    throw error;
+  }
 
   const table = useReactTable({
     data: data ?? [],
@@ -165,7 +173,7 @@ export function ForksTable({
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow>
+              <TableRow className="odd:bg-muted">
                 <TableCell colSpan={columns.length} className="h-48">
                   <div className="flex h-full items-center justify-center">
                     <Loader2 className="text-primary h-8 w-8 animate-spin" />
@@ -177,6 +185,7 @@ export function ForksTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="odd:bg-muted"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

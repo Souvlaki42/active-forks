@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CardLayout } from "~/components/card-layout";
 import { ForksTable } from "~/components/forks-table/table";
@@ -13,17 +12,20 @@ export default async function Repo({
 }) {
   const { repo } = await params;
 
-  const { data, error } = await tryCatch(getForks({ repo: repo?.join("/") }));
-
-  if (error?.message.includes("Not Found")) notFound();
-
-  if (error) throw error;
+  const promise = tryCatch(getForks({ repo: repo?.join("/") }));
 
   return (
     <CardLayout className="flex flex-col gap-4">
       <RepoSearchForm />
-      <Suspense fallback={<ForksTable loading />}>
-        <ForksTable data={data} />
+      <Suspense
+        fallback={
+          <ForksTable
+            loading
+            promisedData={Promise.resolve({ data: [], error: null })}
+          />
+        }
+      >
+        <ForksTable promisedData={promise} />
       </Suspense>
     </CardLayout>
   );
