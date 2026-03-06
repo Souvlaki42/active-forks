@@ -22,8 +22,9 @@ export const columns: ColumnDef<Fork>[] = [
           href={link}
           target="_blank"
           className="text-blue-500 hover:underline"
+          title={name}
         >
-          {name}
+          <span className="truncate">{name}</span>
         </Link>
       );
     },
@@ -40,7 +41,8 @@ export const columns: ColumnDef<Fork>[] = [
         <Link
           href={`https://github.com/${owner}`}
           target="_blank"
-          className="flex items-center gap-2 text-blue-500 hover:underline"
+          className="flex items-center gap-2 text-blue-500 hover:underline min-w-0"
+          title={owner}
         >
           <Image
             src={avatar}
@@ -49,7 +51,7 @@ export const columns: ColumnDef<Fork>[] = [
             width={32}
             height={32}
           />
-          {owner}
+          <span className="truncate">{owner}</span>
         </Link>
       );
     },
