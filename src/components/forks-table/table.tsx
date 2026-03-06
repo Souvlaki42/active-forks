@@ -6,6 +6,9 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type PaginationState,
+  type SortingState,
+  type Updater,
   useReactTable,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
@@ -29,7 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { columns } from "./columns";
+import { columnList, columns } from "./columns";
 import { PaginationControls } from "./pagination";
 
 export function ForksTable({
@@ -55,17 +58,7 @@ export function ForksTable({
 
   const [{ sort_id, sort_desc }, setSorting] = useQueryStates(
     {
-      sort_id: parseAsStringEnum([
-        "name",
-        "owner",
-        "branch",
-        "stars",
-        "forks",
-        "watchers",
-        "openIssues",
-        "size",
-        "lastPush",
-      ]).withDefault("stars"),
+      sort_id: parseAsStringEnum(columnList).withDefault("stars"),
       sort_desc: parseAsBoolean.withDefault(true),
     },
     {
@@ -111,25 +104,25 @@ export function ForksTable({
       globalFilter: filter_query,
       sorting: sortingState,
     },
-    onPaginationChange: (updater) => {
+    onPaginationChange: (updater: Updater<PaginationState>) => {
       const next =
         typeof updater === "function"
           ? updater({ pageIndex: page - 1, pageSize: per_page })
           : updater;
       setPagination({ page: next.pageIndex + 1, per_page: next.pageSize });
     },
-    onSortingChange: (updater) => {
+    onSortingChange: (updater: Updater<SortingState>) => {
       const next =
         typeof updater === "function"
           ? updater([{ id: sort_id, desc: sort_desc }])
           : updater;
-      if (!next[0]) return;
+      if (next.length === 0) return;
       setSorting({
-        sort_id: next[0].id as typeof sort_id,
+        sort_id: next[0].id,
         sort_desc: next[0].desc,
       });
     },
-    onGlobalFilterChange: (updater) => {
+    onGlobalFilterChange: (updater: Updater<string>) => {
       const next =
         typeof updater === "function" ? updater(filter_query) : updater;
       setGlobalFilter({ filter_query: next });
