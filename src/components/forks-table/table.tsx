@@ -10,10 +10,12 @@ import {
   type SortingState,
   type Updater,
   useReactTable,
+  type VisibilityState,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 import { notFound } from "next/navigation";
 import {
+  parseAsArrayOf,
   parseAsBoolean,
   parseAsInteger,
   parseAsString,
@@ -23,6 +25,13 @@ import {
 import { use, useMemo } from "react";
 import type { Fork } from "~/lib/github/schema";
 import { fuzzyFilter, type Result } from "~/lib/utils";
+import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
 import {
   Table,
@@ -80,6 +89,17 @@ export function ForksTable({
     },
   );
 
+  const [{ hidden_columns }, setHiddenColumns] = useQueryStates(
+    {
+      hidden_columns: parseAsArrayOf(parseAsString, ",").withDefault([]),
+    },
+    {
+      urlKeys: {
+        hidden_columns: "hidden",
+      },
+    },
+  );
+
   const sortingState = useMemo(
     () => [{ id: sort_id, desc: sort_desc }],
     [sort_id, sort_desc],
@@ -89,6 +109,14 @@ export function ForksTable({
     () => ({ pageIndex: page - 1, pageSize: per_page }),
     [page, per_page],
   );
+
+  const columnVisibilityState = useMemo(() => {
+    const hiddenColumnsObj: VisibilityState = {};
+    columnList.forEach((col) => {
+      hiddenColumnsObj[col] = !hidden_columns.includes(col);
+    });
+    return hiddenColumnsObj;
+  }, [hidden_columns]);
 
   const { data, error } = use(promisedData);
 
@@ -103,6 +131,7 @@ export function ForksTable({
       pagination: paginationState,
       globalFilter: filter_query,
       sorting: sortingState,
+      columnVisibility: columnVisibilityState,
     },
     onPaginationChange: (updater: Updater<PaginationState>) => {
       const next =
@@ -127,6 +156,15 @@ export function ForksTable({
         typeof updater === "function" ? updater(filter_query) : updater;
       setGlobalFilter({ filter_query: next });
     },
+    onColumnVisibilityChange: (updater: Updater<VisibilityState>) => {
+      const next =
+        typeof updater === "function"
+          ? updater(columnVisibilityState)
+          : updater;
+      setHiddenColumns({
+        hidden_columns: Object.keys(next).filter((key) => !next[key]),
+      });
+    },
     columns,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
@@ -143,6 +181,32 @@ export function ForksTable({
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="rounded-md border">
         <Table>
