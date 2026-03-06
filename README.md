@@ -4,27 +4,19 @@ A app that shows the active forks of a GitHub repository.
 
 ## Features
 
-- Search for forks by name
-- Filter by owner, default branch, stars, forks, watchers, open issues, size, and last push date
-- Sort by stars, forks, watchers, open issues, size, and last push date
-- View forks on GitHub
-- View forks on GitLab (might come soon)
-- View forks on Bitbucket (might come soon)
-- View forks on Gitea (might come soon)
+Search for forks by name
+Filter by owner, default branch, stars, forks, watchers, open issues, size, and last push date
+Sort by stars, forks, watchers, open issues, size, and last push date
+Recursively search fork networks
+Responsive design
+
+View forks on GitHub
+View forks on GitLab (might come soon)
+View forks on Bitbucket (might come soon)
+View forks on Gitea (might come soon)
 
 ![Screenshot of the app](screenshots/current.png)
 This might be outdated, but it's the best I could do.
-
-## Technologies
-
-- [Next.js](https://nextjs.org/) framework
-- GitHub REST API using the [Octokit](https://github.com/octokit/octokit.js) library
-- [Tailwind CSS](https://tailwindcss.com/) framework
-- [Shadcn UI](https://shadcn.com/) components
-- [Tweakcn](https://tweakcn.com/) to customize the Shadcn UI components
-- [Tanstack Table](https://tanstack.com/table/v8) for the table component
-- [React Hook Form](https://react-hook-form.com/) for form validation
-- And more...
 
 ## TODO
 
