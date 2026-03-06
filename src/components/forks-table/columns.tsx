@@ -8,7 +8,7 @@ import { howLongAgo } from "~/lib/rtf";
 import ClientDate from "../date";
 import { ForkHeader } from "./header";
 
-export const columns: ColumnDef<Fork>[] = [
+export const columns = [
   {
     accessorKey: "name",
     header: ({ column }) => <ForkHeader column={column} title="Repo" />,
@@ -91,4 +91,6 @@ export const columns: ColumnDef<Fork>[] = [
       return <ClientDate date={row.original.lastPush} />;
     },
   },
-];
+] satisfies ColumnDef<Fork>[];
+
+export const columnList = columns.map((col) => col.id ?? col.accessorKey);
