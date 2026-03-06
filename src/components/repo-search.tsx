@@ -37,7 +37,7 @@ export function RepoSearchForm() {
   const onSubmit: SubmitHandler<z.infer<typeof RepoSearchSchema>> = (
     values,
   ) => {
-    router.push(`/${values.repo}?${searchParams.toString()}`);
+    router.push(`/${values.repo?.trim()}?${searchParams.toString()}`);
   };
 
   return (
@@ -59,7 +59,10 @@ export function RepoSearchForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={form.formState.isSubmitted}>
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitted || !form.formState.isDirty}
+        >
           {form.formState.isSubmitted ? (
             <Loader2 className="text-secondary h-5 w-5 animate-spin" />
           ) : null}
