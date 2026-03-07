@@ -45,14 +45,13 @@ export default function RootLayout({
         <NuqsAdapter>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
             <NextTopLoader color="var(--primary)" />
             {children}
             {env.NODE_ENV === "development" && (
-              <div className="fixed bottom-1 left-1 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-primary p-3 font-mono text-xs text-white">
+              <div className="fixed bottom-1 left-1 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-card p-3 font-mono text-xs text-card-foreground">
                 <div className="block sm:hidden">xs</div>
                 <div className="hidden sm:block md:hidden">sm</div>
                 <div className="hidden md:block lg:hidden">md</div>
