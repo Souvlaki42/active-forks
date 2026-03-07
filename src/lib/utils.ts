@@ -59,3 +59,8 @@ export async function tryCatch<T, E = Error>(
 }
 
 export const repoPattern = /^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/;
+
+export function camelCaseToTitleCase(str: string) {
+  const result = str.replace(/([A-Z])/g, " $1");
+  return result.charAt(0).toUpperCase() + result.slice(1);
+}

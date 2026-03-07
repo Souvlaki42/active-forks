@@ -24,7 +24,7 @@ import {
 } from "nuqs";
 import { use, useMemo } from "react";
 import type { Fork } from "~/lib/github/schema";
-import { fuzzyFilter, type Result } from "~/lib/utils";
+import { camelCaseToTitleCase, fuzzyFilter, type Result } from "~/lib/utils";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -195,13 +195,12 @@ export function ForksTable({
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) =>
                       column.toggleVisibility(!!value)
                     }
                   >
-                    {column.id}
+                    {camelCaseToTitleCase(column.id)}
                   </DropdownMenuCheckboxItem>
                 );
               })}
