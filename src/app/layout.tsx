@@ -1,13 +1,25 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { DM_Sans, Fira_Code, Lora } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ThemeProvider } from "~/components/theme-provider";
 import "./globals.css";
 import { env } from "~/lib/env";
+import { cn } from "~/lib/utils";
 
-const mainFont = DM_Sans({
+const fontSans = DM_Sans({
   subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const fontSerif = Lora({
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
+
+const fontMono = Fira_Code({
+  subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -22,7 +34,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={mainFont.className}>
+      <body
+        className={cn(
+          fontSans.variable,
+          fontSerif.variable,
+          fontMono.variable,
+          "antialiased",
+        )}
+      >
         <NuqsAdapter>
           <ThemeProvider
             attribute="class"
