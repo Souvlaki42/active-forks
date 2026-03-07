@@ -7,7 +7,6 @@ import { Card } from "./ui/card";
 type CardLayoutProps = {
   children: React.ReactNode;
   className?: string;
-  maxWidth?: number;
 };
 
 const Logo = () => (
@@ -28,14 +27,10 @@ const Logo = () => (
   </svg>
 );
 
-export const CardLayout: FC<CardLayoutProps> = ({
-  children,
-  className,
-  maxWidth = 1200,
-}) => {
+export const CardLayout: FC<CardLayoutProps> = ({ children, className }) => {
   return (
-    <main className="bg-background text-foreground min-h-screen p-8">
-      <Card className={`mx-auto max-w-[${maxWidth}px]`}>
+    <main className="bg-background text-foreground min-h-screen p-6">
+      <Card>
         <div className={cn("p-6", className)}>
           <header className="mb-6 flex items-center justify-between">
             <Link
