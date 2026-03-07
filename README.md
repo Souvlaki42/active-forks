@@ -8,6 +8,7 @@ Search for forks by name
 Filter by owner, default branch, stars, forks, watchers, open issues, size, and last push date
 Sort by stars, forks, watchers, open issues, size, and last push date
 Recursively search fork networks
+Hide columns
 Responsive design
 
 View forks on GitHub
@@ -59,3 +60,5 @@ And open [http://localhost:3000](http://localhost:3000) with your browser to see
 This project is licensed under the [Apache License 2.0](LICENSE) license.
 
 This project is a fork of [active-forks](https://github.com/techgaun/active-forks) by [techgaun](https://github.com/techgaun).
+
+Using [Lucide Icons](https://lucide.dev/icons) from [Lucide React](https://lucide.dev/guide/packages/lucide-react) and [Github Octicons](https://iconbuddy.com/octicon) from [Icon Buddy](https://iconbuddy.com).
