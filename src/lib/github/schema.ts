@@ -20,8 +20,7 @@ export const RepoSchema = z
   .string()
   .refine((value) => repoPattern.test(value), {
     message: "Invalid repo format! Please select a valid repo.",
-  })
-  .optional();
+  });
 
 export type Repo = z.infer<typeof RepoSchema>;
 
