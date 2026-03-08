@@ -29,7 +29,7 @@ const Logo = () => (
 
 export const CardLayout: FC<CardLayoutProps> = ({ children, className }) => {
   return (
-    <main className="bg-background text-foreground min-h-screen p-6">
+    <main className="bg-background text-foreground min-h-screen p-6 mx-auto max-w-fit">
       <Card>
         <div className={cn("p-6", className)}>
           <header className="mb-6 flex items-center justify-between">
