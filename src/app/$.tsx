@@ -7,7 +7,7 @@ import { RepoSearchForm } from "~/components/repo-search";
 import { getForks } from "~/lib/github/forks";
 import { tryCatch } from "~/lib/utils";
 
-export const Route = createFileRoute("/app/$owner/$repo")({
+export const Route = createFileRoute("/$")({
   component: Repo,
 });
 

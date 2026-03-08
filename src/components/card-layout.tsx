@@ -34,7 +34,7 @@ export const CardLayout: FC<CardLayoutProps> = ({ children, className }) => {
         <div className={cn("p-6", className)}>
           <header className="mb-6 flex items-center justify-between">
             <Link
-              to={"/"}
+              to={"/$"}
               className="flex items-center gap-2"
               aria-label="Active Forks - Home"
             >
