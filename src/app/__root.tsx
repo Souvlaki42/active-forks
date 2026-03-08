@@ -8,7 +8,6 @@ import {
 import { SearchXIcon } from "lucide-react";
 import { CardLayout } from "~/components/card-layout";
 import { ThemeProvider } from "~/components/theme-provider";
-import { Toaster } from "~/components/ui/sonner";
 import appCss from "./globals.css?url";
 
 export const Route = createRootRoute({
@@ -59,7 +58,6 @@ function RootLayout() {
         <ThemeProvider storageKey="vite-ui-theme" defaultTheme="system">
           <Outlet />
           <Scripts />
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>

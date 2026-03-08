@@ -2,11 +2,11 @@ import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Image } from "@unpic/react";
 import type { Fork } from "~/lib/github/schema";
-import { howLongAgo } from "~/lib/singletons/rtf";
+import { howLongAgo } from "~/lib/rtf";
 import ClientDate from "../date";
 import { ForkHeader } from "./header";
 
-export const columns: ColumnDef<Fork>[] = [
+export const columns = [
   {
     accessorKey: "name",
     header: ({ column }) => <ForkHeader column={column} title="Repo" />,
@@ -20,8 +20,9 @@ export const columns: ColumnDef<Fork>[] = [
           to={link}
           target="_blank"
           className="text-blue-500 hover:underline"
+          title={name}
         >
-          {name}
+          <span className="truncate">{name}</span>
         </Link>
       );
     },
@@ -38,7 +39,8 @@ export const columns: ColumnDef<Fork>[] = [
         <Link
           to={`https://github.com/${owner}`}
           target="_blank"
-          className="flex items-center gap-2 text-blue-500 hover:underline"
+          className="flex items-center gap-2 text-blue-500 hover:underline min-w-0"
+          title={owner}
         >
           <Image
             src={avatar}
@@ -47,7 +49,7 @@ export const columns: ColumnDef<Fork>[] = [
             width={32}
             height={32}
           />
-          {owner}
+          <span className="truncate">{owner}</span>
         </Link>
       );
     },
@@ -87,4 +89,6 @@ export const columns: ColumnDef<Fork>[] = [
       return <ClientDate date={row.original.lastPush} />;
     },
   },
-];
+] satisfies ColumnDef<Fork>[];
+
+export const columnList = columns.map((col) => col.id ?? col.accessorKey);

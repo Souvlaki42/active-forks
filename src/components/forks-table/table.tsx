@@ -4,15 +4,34 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
+  type PaginationState,
+  type SortingState,
+  type Updater,
   useReactTable,
+  type VisibilityState,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "nextjs-toploader/app";
-import { useTableSearchParams } from "tanstack-table-search-params";
-import type { ForkList } from "~/lib/github/schema";
-import { fuzzyFilter } from "~/lib/utils";
+import { notFound } from "next/navigation";
+import {
+  parseAsArrayOf,
+  parseAsBoolean,
+  parseAsInteger,
+  parseAsString,
+  parseAsStringEnum,
+  useQueryStates,
+} from "nuqs";
+import { use, useMemo } from "react";
+import type { Fork } from "~/lib/github/schema";
+import { camelCaseToTitleCase, fuzzyFilter, type Result } from "~/lib/utils";
+import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
 import {
   Table,
@@ -22,59 +41,136 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { columns } from "./columns";
+import { columnList, columns } from "./columns";
 import { PaginationControls } from "./pagination";
+
 export function ForksTable({
-  data = { forks: [], total: 0 },
+  promisedData,
   loading = false,
 }: {
-  data?: ForkList;
+  promisedData: Promise<Result<Fork[], Error>>;
   loading?: boolean;
 }) {
-  const { replace } = useRouter();
-  const searchParams = useSearchParams();
-  const pathName = usePathname();
-
-  const stateAndOnChanges = useTableSearchParams(
+  const [{ page, per_page }, setPagination] = useQueryStates(
     {
-      pathname: pathName,
-      query: searchParams,
-      replace,
+      page: parseAsInteger.withDefault(1),
+      per_page: parseAsInteger.withDefault(30),
     },
     {
-      paramNames: {
-        globalFilter: "q",
-        pagination: {
-          pageIndex: "page",
-          pageSize: "per_page",
-        },
-        sorting: (defaultParamName) => defaultParamName,
-        columnFilters: (defaultParamName) => defaultParamName,
-        columnOrder: (defaultParamName) => defaultParamName,
-        rowSelection: (defaultParamName) => defaultParamName,
-      },
-      defaultValues: {
-        pagination: {
-          pageIndex: 0,
-          pageSize: 30,
-        },
-        sorting: [{ id: "stars", desc: true }],
+      history: "push",
+      urlKeys: {
+        page: "page",
+        per_page: "per_page",
       },
     },
   );
 
+  const [{ sort_id, sort_desc }, setSorting] = useQueryStates(
+    {
+      sort_id: parseAsStringEnum(columnList).withDefault("stars"),
+      sort_desc: parseAsBoolean.withDefault(true),
+    },
+    {
+      urlKeys: {
+        sort_id: "sort",
+        sort_desc: "desc",
+      },
+    },
+  );
+
+  const [{ filter_query }, setGlobalFilter] = useQueryStates(
+    {
+      filter_query: parseAsString.withDefault(""),
+    },
+    {
+      urlKeys: {
+        filter_query: "q",
+      },
+    },
+  );
+
+  const [{ hidden_columns }, setHiddenColumns] = useQueryStates(
+    {
+      hidden_columns: parseAsArrayOf(parseAsString, ",").withDefault([]),
+    },
+    {
+      urlKeys: {
+        hidden_columns: "hidden",
+      },
+    },
+  );
+
+  const sortingState = useMemo(
+    () => [{ id: sort_id, desc: sort_desc }],
+    [sort_id, sort_desc],
+  );
+
+  const paginationState = useMemo(
+    () => ({ pageIndex: page - 1, pageSize: per_page }),
+    [page, per_page],
+  );
+
+  const columnVisibilityState = useMemo(() => {
+    const hiddenColumnsObj: VisibilityState = {};
+    columnList.forEach((col) => {
+      hiddenColumnsObj[col] = !hidden_columns.includes(col);
+    });
+    return hiddenColumnsObj;
+  }, [hidden_columns]);
+
+  const { data, error } = use(promisedData);
+
+  if (error) {
+    if (error.message.includes("Not Found")) notFound();
+    throw error;
+  }
+
   const table = useReactTable({
-    data: data?.forks ?? [],
+    data: data ?? [],
+    state: {
+      pagination: paginationState,
+      globalFilter: filter_query,
+      sorting: sortingState,
+      columnVisibility: columnVisibilityState,
+    },
+    onPaginationChange: (updater: Updater<PaginationState>) => {
+      const next =
+        typeof updater === "function"
+          ? updater({ pageIndex: page - 1, pageSize: per_page })
+          : updater;
+      setPagination({ page: next.pageIndex + 1, per_page: next.pageSize });
+    },
+    onSortingChange: (updater: Updater<SortingState>) => {
+      const next =
+        typeof updater === "function"
+          ? updater([{ id: sort_id, desc: sort_desc }])
+          : updater;
+      if (next.length === 0) return;
+      setSorting({
+        sort_id: next[0].id,
+        sort_desc: next[0].desc,
+      });
+    },
+    onGlobalFilterChange: (updater: Updater<string>) => {
+      const next =
+        typeof updater === "function" ? updater(filter_query) : updater;
+      setGlobalFilter({ filter_query: next });
+    },
+    onColumnVisibilityChange: (updater: Updater<VisibilityState>) => {
+      const next =
+        typeof updater === "function"
+          ? updater(columnVisibilityState)
+          : updater;
+      setHiddenColumns({
+        hidden_columns: Object.keys(next).filter((key) => !next[key]),
+      });
+    },
     columns,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    manualPagination: true,
-    manualSorting: false,
-    enableSorting: data?.total !== 0,
-    rowCount: data?.total ?? 0,
-    ...stateAndOnChanges,
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
@@ -85,6 +181,31 @@ export function ForksTable({
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {camelCaseToTitleCase(column.id)}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -108,7 +229,7 @@ export function ForksTable({
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow>
+              <TableRow className="odd:bg-muted">
                 <TableCell colSpan={columns.length} className="h-48">
                   <div className="flex h-full items-center justify-center">
                     <Loader2 className="text-primary h-8 w-8 animate-spin" />
@@ -120,6 +241,7 @@ export function ForksTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="odd:bg-muted"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -144,7 +266,7 @@ export function ForksTable({
           </TableBody>
         </Table>
       </div>
-      <PaginationControls table={table} total={data?.total ?? 0} />
+      <PaginationControls table={table} />
     </div>
   );
 }

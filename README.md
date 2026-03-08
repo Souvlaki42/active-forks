@@ -4,27 +4,20 @@ A app that shows the active forks of a GitHub repository.
 
 ## Features
 
-- Search for forks by name
-- Filter by owner, default branch, stars, forks, watchers, open issues, size, and last push date
-- Sort by stars, forks, watchers, open issues, size, and last push date
-- View forks on GitHub
-- View forks on GitLab (might come soon)
-- View forks on Bitbucket (might come soon)
-- View forks on Gitea (might come soon)
+Search for forks by name
+Filter by owner, default branch, stars, forks, watchers, open issues, size, and last push date
+Sort by stars, forks, watchers, open issues, size, and last push date
+Recursively search fork networks
+Hide columns
+Responsive design
 
-![Screenshot of the app](public/screenshot.png)
+View forks on GitHub
+View forks on GitLab (might come soon)
+View forks on Bitbucket (might come soon)
+View forks on Gitea (might come soon)
+
+![Screenshot of the app](screenshots/current.png)
 This might be outdated, but it's the best I could do.
-
-## Technologies
-
-- [Next.js](https://nextjs.org/) framework
-- GitHub REST API using the [Octokit](https://github.com/octokit/octokit.js) library
-- [Tailwind CSS](https://tailwindcss.com/) framework
-- [Shadcn UI](https://shadcn.com/) components
-- [Tweakcn](https://tweakcn.com/) to customize the Shadcn UI components
-- [Tanstack Table](https://tanstack.com/table/v8) for the table component
-- [React Hook Form](https://react-hook-form.com/) for form validation
-- And more...
 
 ## TODO
 
@@ -67,3 +60,5 @@ And open [http://localhost:3000](http://localhost:3000) with your browser to see
 This project is licensed under the [Apache License 2.0](LICENSE) license.
 
 This project is a fork of [active-forks](https://github.com/techgaun/active-forks) by [techgaun](https://github.com/techgaun).
+
+Using [Lucide Icons](https://lucide.dev/icons) from [Lucide React](https://lucide.dev/guide/packages/lucide-react) and [Github Octicons](https://iconbuddy.com/octicon) from [Icon Buddy](https://iconbuddy.com).

@@ -37,7 +37,7 @@ export function RepoSearchForm() {
   const onSubmit: SubmitHandler<z.infer<typeof RepoSearchSchema>> = (
     values,
   ) => {
-    router.push(`/${values.repo}?${searchParams.toString()}`);
+    router.push(`/${values.repo?.trim()}?${searchParams.toString()}`);
   };
 
   return (
@@ -53,13 +53,19 @@ export function RepoSearchForm() {
             <FormItem className="flex-1">
               <FormLabel className="sr-only">Repo to search</FormLabel>
               <FormControl>
-                <Input placeholder="techgaun/active-forks" {...field} />
+                <Input
+                  placeholder='Find repository (e.g. "techgaun/active-forks")'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={form.formState.isSubmitted}>
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitted || !form.formState.isDirty}
+        >
           {form.formState.isSubmitted ? (
             <Loader2 className="text-secondary h-5 w-5 animate-spin" />
           ) : null}
