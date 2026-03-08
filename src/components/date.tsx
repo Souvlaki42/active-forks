@@ -1,5 +1,3 @@
-"use client";
-
 import { type ComponentType, type ReactNode, useEffect, useState } from "react";
 import { howLongAgo } from "~/lib/rtf";
 
