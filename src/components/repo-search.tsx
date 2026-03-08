@@ -1,8 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "@tanstack/react-form";
 import { Loader2 } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "nextjs-toploader/app";
-import { type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import {
@@ -12,6 +10,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  useFormField,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { RepoSchema } from "~/lib/github/schema";
@@ -25,29 +24,30 @@ export function RepoSearchForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const form = useForm<z.infer<typeof RepoSearchSchema>>({
-    resolver: zodResolver(RepoSearchSchema),
+  const form = useForm({
+    validators: {
+      onSubmit: RepoSearchSchema,
+    },
     defaultValues: {
       repo: pathname.substring(1),
     },
+    onSubmit: async (values) => {
+      router.push(`/${values.repo.trim()}?${searchParams.toString()}`);
+    },
   });
-
-  const onSubmit: SubmitHandler<z.infer<typeof RepoSearchSchema>> = (
-    values,
-  ) => {
-    router.push(`/${values.repo?.trim()}?${searchParams.toString()}`);
-  };
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={(e) => {
+          e.preventDefault();
+          form.handleSubmit();
+        }}
         className="flex items-end space-x-2"
       >
         <FormField
-          control={form.control}
           name="repo"
-          render={({ field }) => (
+          render={(field) => (
             <FormItem className="flex-1">
               <FormLabel className="sr-only">Repo to search</FormLabel>
               <FormControl>
