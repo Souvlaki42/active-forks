@@ -8,6 +8,7 @@ import {
 import { SearchXIcon } from "lucide-react";
 import { CardLayout } from "~/components/card-layout";
 import { ThemeProvider } from "~/components/theme-provider";
+import { getThemeServerFn } from "~/lib/theme";
 import appCss from "./globals.css?url";
 
 export const Route = createRootRoute({
@@ -28,8 +29,25 @@ export const Route = createRootRoute({
       },
     ],
   }),
-  component: RootLayout,
   notFoundComponent: NotFound,
+  shellComponent: RootLayout,
+  loader: async () => ({
+    theme: await getThemeServerFn(),
+  }),
+  scripts: () => [
+    {
+      src: `
+    var cookie = document.cookie.match(/theme=([^;]+)/);
+    var theme = cookie ? cookie[1] : 'system';
+    if (theme === 'system') {
+      theme = window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+    }
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(theme);`,
+    },
+  ],
 });
 
 function NotFound() {
@@ -40,7 +58,7 @@ function NotFound() {
       The repository you are looking for does not exist or has been removed.
     </p>
     <Link
-      to="/"
+      to="/{-$owner}/{-$repo}"
       className="mt-4 inline-flex items-center rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
     >
       Return to Home
@@ -49,13 +67,14 @@ function NotFound() {
 }
 
 function RootLayout() {
+  const { theme } = Route.useLoaderData();
   return (
     <html lang="en">
       <head>
         <HeadContent />
       </head>
       <body>
-        <ThemeProvider storageKey="vite-ui-theme" defaultTheme="system">
+        <ThemeProvider theme={theme}>
           <Outlet />
           <Scripts />
         </ThemeProvider>
