@@ -8,63 +8,63 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./app/__root";
-import { Route as Char123OwnerChar125Char123RepoChar125RouteImport } from "./app/{-$owner}/{-$repo}";
+import { Route as rootRouteImport } from './app/__root'
+import { Route as Char123OwnerChar125Char123RepoChar125RouteImport } from './app/{-$owner}/{-$repo}'
 
 const Char123OwnerChar125Char123RepoChar125Route =
   Char123OwnerChar125Char123RepoChar125RouteImport.update({
-    id: "/{-$owner}/{-$repo}",
-    path: "/{-$owner}/{-$repo}",
+    id: '/{-$owner}/{-$repo}',
+    path: '/{-$owner}/{-$repo}',
     getParentRoute: () => rootRouteImport,
-  } as any);
+  } as any)
 
 export interface FileRoutesByFullPath {
-  "/{-$owner}/{-$repo}": typeof Char123OwnerChar125Char123RepoChar125Route;
+  '/{-$owner}/{-$repo}': typeof Char123OwnerChar125Char123RepoChar125Route
 }
 export interface FileRoutesByTo {
-  "/{-$owner}/{-$repo}": typeof Char123OwnerChar125Char123RepoChar125Route;
+  '/{-$owner}/{-$repo}': typeof Char123OwnerChar125Char123RepoChar125Route
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/{-$owner}/{-$repo}": typeof Char123OwnerChar125Char123RepoChar125Route;
+  __root__: typeof rootRouteImport
+  '/{-$owner}/{-$repo}': typeof Char123OwnerChar125Char123RepoChar125Route
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/{-$owner}/{-$repo}";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/{-$owner}/{-$repo}";
-  id: "__root__" | "/{-$owner}/{-$repo}";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/{-$owner}/{-$repo}'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/{-$owner}/{-$repo}'
+  id: '__root__' | '/{-$owner}/{-$repo}'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  Char123OwnerChar125Char123RepoChar125Route: typeof Char123OwnerChar125Char123RepoChar125Route;
+  Char123OwnerChar125Char123RepoChar125Route: typeof Char123OwnerChar125Char123RepoChar125Route
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/{-$owner}/{-$repo}": {
-      id: "/{-$owner}/{-$repo}";
-      path: "/{-$owner}/{-$repo}";
-      fullPath: "/{-$owner}/{-$repo}";
-      preLoaderRoute: typeof Char123OwnerChar125Char123RepoChar125RouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/{-$owner}/{-$repo}': {
+      id: '/{-$owner}/{-$repo}'
+      path: '/{-$owner}/{-$repo}'
+      fullPath: '/{-$owner}/{-$repo}'
+      preLoaderRoute: typeof Char123OwnerChar125Char123RepoChar125RouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   Char123OwnerChar125Char123RepoChar125Route:
     Char123OwnerChar125Char123RepoChar125Route,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx";
-import type { createStart } from "@tanstack/react-start";
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }
