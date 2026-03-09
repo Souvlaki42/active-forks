@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "@tanstack/react-form";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import {
@@ -10,7 +11,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  useFormField,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { RepoSchema } from "~/lib/github/schema";
@@ -19,20 +19,23 @@ const RepoSearchSchema = z.object({
   repo: RepoSchema,
 });
 
+type RepoSearch = z.infer<typeof RepoSearchSchema>;
+
 export function RepoSearchForm() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const { pathname, searchStr } = useLocation();
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<RepoSearch> = async ({ repo }) => {
+    navigate({
+      to: `/${repo.trim()}`,
+      search: searchStr,
+    });
+  };
 
   const form = useForm({
-    validators: {
-      onSubmit: RepoSearchSchema,
-    },
+    resolver: zodResolver(RepoSearchSchema),
     defaultValues: {
       repo: pathname.substring(1),
-    },
-    onSubmit: async (values) => {
-      router.push(`/${values.repo.trim()}?${searchParams.toString()}`);
     },
   });
 
@@ -41,7 +44,7 @@ export function RepoSearchForm() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          form.handleSubmit();
+          form.handleSubmit(onSubmit);
         }}
         className="flex items-end space-x-2"
       >
