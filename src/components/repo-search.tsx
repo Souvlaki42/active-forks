@@ -36,7 +36,7 @@ export function RepoSearchForm() {
   const onSubmit: SubmitHandler<z.infer<typeof RepoSearchSchema>> = (
     values,
   ) => {
-    router.push(`/${values.repo?.trim()}?${searchParams.toString()}`);
+    router.push(`/${values.repo.trim()}?${searchParams.toString()}`);
   };
 
   return (

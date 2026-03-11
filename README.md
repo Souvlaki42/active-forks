@@ -1,6 +1,6 @@
 # Active Forks
 
-A app that shows the active forks of a GitHub repository.
+A app that shows the active forks of a Git repository.
 
 ## Features
 
