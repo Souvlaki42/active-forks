@@ -13,7 +13,6 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
-import { notFound } from "next/navigation";
 import {
   parseAsArrayOf,
   parseAsBoolean,
@@ -23,8 +22,8 @@ import {
   useQueryStates,
 } from "nuqs";
 import { use, useMemo } from "react";
-import type { Fork } from "~/lib/github/schema";
-import { camelCaseToTitleCase, fuzzyFilter, type Result } from "~/lib/utils";
+import type { Fork } from "~/actions/github";
+import { camelCaseToTitleCase, fuzzyFilter } from "~/lib/utils";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -44,13 +43,12 @@ import {
 import { columnList, columns } from "./columns";
 import { PaginationControls } from "./pagination";
 
-export function ForksTable({
-  promisedData,
-  loading = false,
-}: {
-  promisedData: Promise<Result<Fork[], Error>>;
+type Props = {
+  promise: Promise<Fork[]>;
   loading?: boolean;
-}) {
+};
+
+export function ForksTable({ promise, loading = false }: Props) {
   const [{ page, per_page }, setPagination] = useQueryStates(
     {
       page: parseAsInteger.withDefault(1),
@@ -118,15 +116,10 @@ export function ForksTable({
     return hiddenColumnsObj;
   }, [hidden_columns]);
 
-  const { data, error } = use(promisedData);
-
-  if (error) {
-    if (error.message.includes("Not Found")) notFound();
-    throw error;
-  }
+  const data = use(promise);
 
   const table = useReactTable({
-    data: data ?? [],
+    data,
     state: {
       pagination: paginationState,
       globalFilter: filter_query,
