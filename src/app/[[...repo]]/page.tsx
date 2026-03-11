@@ -1,9 +1,8 @@
 import { Suspense } from "react";
+import { getForks } from "~/actions/github";
 import { CardLayout } from "~/components/card-layout";
 import { ForksTable } from "~/components/forks-table/table";
 import { RepoSearchForm } from "~/components/repo-search";
-import { getForks } from "~/lib/github/forks";
-import { tryCatch } from "~/lib/utils";
 
 export default async function Repo({
   params,
@@ -11,21 +10,15 @@ export default async function Repo({
   params: Promise<{ repo?: string[] }>;
 }) {
   const { repo } = await params;
+  const [owner, repoName] = repo ?? [];
 
-  const promise = tryCatch(getForks({ repo: repo?.join("/") }));
+  const forks = getForks({ owner, repo: repoName });
 
   return (
     <CardLayout className="flex flex-col gap-4">
       <RepoSearchForm />
-      <Suspense
-        fallback={
-          <ForksTable
-            loading
-            promisedData={Promise.resolve({ data: [], error: null })}
-          />
-        }
-      >
-        <ForksTable promisedData={promise} />
+      <Suspense fallback={<ForksTable loading promise={Promise.resolve([])} />}>
+        <ForksTable promise={forks} />
       </Suspense>
     </CardLayout>
   );
