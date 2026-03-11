@@ -96,11 +96,12 @@ export const getForks = async (args: ActionArgsInput): Promise<Fork[]> => {
     return parsedArray.data;
   };
 
-  const getForkLevel = env.FORCE_DISABLE_CACHE
-    ? getForkLevelRaw
-    : cache(getForkLevelRaw, [`github-forks:${owner}:${repo}`], {
-        revalidate: REVALIDATE_TIME,
-      });
+  const getForkLevel =
+    env.FORCE_DISABLE_CACHE && env.NODE_ENV === "development"
+      ? getForkLevelRaw
+      : cache(getForkLevelRaw, [`github-forks:${owner}:${repo}`], {
+          revalidate: REVALIDATE_TIME,
+        });
 
   const forks: Fork[] = await getForkLevel();
 
