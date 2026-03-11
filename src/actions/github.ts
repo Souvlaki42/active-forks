@@ -66,27 +66,28 @@ export const getForks = async (args: ActionArgsInput): Promise<Fork[]> => {
     );
 
     if (error) {
-      console.warn(`github: ${error}`);
       if (depth !== 0) return [];
       if (error.status === 404) notFound();
       throw error;
     }
 
-    const rawArray: ForkInput[] = data.map(
-      (fork: RawFork): ForkInput => ({
-        link: fork.html_url,
-        name: fork.name,
-        branch: fork.default_branch,
-        forksCount: fork.forks_count,
-        owner: fork.owner.login,
-        avatar: fork.owner.avatar_url,
-        stars: fork.stargazers_count,
-        size: fork.size,
-        watchers: fork.watchers_count,
-        openIssues: fork.open_issues_count,
-        lastPush: fork.pushed_at ?? undefined,
-      }),
-    );
+    const rawArray: ForkInput[] = data
+      .filter((fork: RawFork) => !fork.disabled)
+      .map(
+        (fork: RawFork): ForkInput => ({
+          link: fork.html_url,
+          name: fork.name,
+          branch: fork.default_branch,
+          forksCount: fork.forks_count,
+          owner: fork.owner.login,
+          avatar: fork.owner.avatar_url,
+          stars: fork.stargazers_count,
+          size: fork.size,
+          watchers: fork.watchers_count,
+          openIssues: fork.open_issues_count,
+          lastPush: fork.pushed_at ?? undefined,
+        }),
+      );
 
     const parsedArray = forkSchema.array().safeParse(rawArray);
 
