@@ -1,96 +1,85 @@
 "use client";
 
-import type { ColumnDef } from "@tanstack/react-table";
+import { createColumnHelper, type HeaderContext } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
 import type { Fork } from "~/actions/github";
-import { howLongAgo } from "~/lib/rtf";
 import ClientDate from "../date";
 import { ForkHeader } from "./header";
 
+const helper = createColumnHelper<Fork>();
+
+const header = <TKey, TValue>({ column }: HeaderContext<TKey, TValue>) => {
+  return <ForkHeader column={column} />;
+};
+
 export const columns = [
-  {
-    accessorKey: "name",
-    header: ({ column }) => <ForkHeader column={column} title="Repo" />,
+  helper.accessor("name", {
+    header,
     cell: ({
       row: {
         original: { link, name },
       },
-    }) => {
-      return (
-        <Link
-          href={link}
-          target="_blank"
-          className="text-blue-500 hover:underline"
-          title={name}
-        >
-          <span className="truncate">{name}</span>
-        </Link>
-      );
-    },
-  },
-  {
-    accessorKey: "owner",
-    header: ({ column }) => <ForkHeader column={column} title="Owner" />,
+    }) => (
+      <Link
+        href={link}
+        target="_blank"
+        className="text-blue-500 hover:underline"
+        title={name}
+      >
+        <span className="truncate">{name}</span>
+      </Link>
+    ),
+  }),
+  helper.accessor("owner", {
+    header,
     cell: ({
       row: {
         original: { owner, avatar },
       },
-    }) => {
-      return (
-        <Link
-          href={`https://github.com/${owner}`}
-          target="_blank"
-          className="flex items-center gap-2 text-blue-500 hover:underline min-w-0"
-          title={owner}
-        >
-          <Image
-            src={avatar}
-            alt={owner}
-            className="rounded-full"
-            width={32}
-            height={32}
-          />
-          <span className="truncate">{owner}</span>
-        </Link>
-      );
-    },
-  },
-  {
-    accessorKey: "branch",
-    header: ({ column }) => (
-      <ForkHeader column={column} title="Default Branch" />
+    }) => (
+      <Link
+        href={`https://github.com/${owner}`}
+        target="_blank"
+        className="flex items-center gap-2 text-blue-500 hover:underline min-w-0"
+        title={owner}
+      >
+        <Image
+          src={avatar}
+          alt={owner}
+          className="rounded-full"
+          width={32}
+          height={32}
+        />
+        <span className="truncate">{owner}</span>
+      </Link>
     ),
-  },
-  {
-    accessorKey: "stars",
-    header: ({ column }) => <ForkHeader column={column} title="Stars" />,
-  },
-  {
-    accessorKey: "forks",
-    header: ({ column }) => <ForkHeader column={column} title="Forks" />,
-  },
-  {
-    accessorKey: "watchers",
-    header: ({ column }) => <ForkHeader column={column} title="Watchers" />,
-  },
-  {
-    accessorKey: "openIssues",
-    header: ({ column }) => <ForkHeader column={column} title="Open Issues" />,
-  },
-  {
-    id: "size",
-    accessorFn: (row) => `${((row.size ?? 0) / 1024).toFixed(2)} MB`,
-    header: ({ column }) => <ForkHeader column={column} title="Size" />,
-  },
-  {
-    id: "lastPush",
-    accessorFn: (row) => howLongAgo(row.lastPush),
-    header: ({ column }) => <ForkHeader column={column} title="Last Push" />,
-    cell: ({ row }) => {
-      return <ClientDate date={row.original.lastPush} />;
+  }),
+  helper.accessor("branch", {
+    header,
+  }),
+  helper.accessor("stars", {
+    header,
+  }),
+  helper.accessor("forksCount", {
+    header,
+  }),
+  helper.accessor("watchers", {
+    header,
+  }),
+  helper.accessor("openIssues", {
+    header,
+  }),
+  helper.accessor("size", {
+    header,
+    cell: ({ getValue }) => `${((getValue() ?? 0) / 1024).toFixed(2)} MB`,
+  }),
+  helper.accessor("lastPush", {
+    header,
+    cell: ({ getValue }) => {
+      return <ClientDate date={getValue()} />;
     },
-  },
-] satisfies ColumnDef<Fork>[];
+  }),
+];
 
-export const columnList = columns.map((col) => col.id ?? col.accessorKey);
+export const columnList = columns.map((col) => col.accessorKey);

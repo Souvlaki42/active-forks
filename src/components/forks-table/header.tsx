@@ -8,19 +8,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { cn } from "~/lib/utils";
+import { camelCaseToTitleCase, cn } from "~/lib/utils";
 
 interface ForkHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
-  title: string;
 }
 
 export function ForkHeader<TData, TValue>({
   column,
-  title,
   className,
 }: ForkHeaderProps<TData, TValue>) {
+  const title = camelCaseToTitleCase(column.id);
+
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
