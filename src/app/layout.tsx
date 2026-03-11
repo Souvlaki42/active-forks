@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { DM_Sans, Fira_Code, Lora } from "next/font/google";
-import NextTopLoader from "nextjs-toploader";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { ThemeProvider } from "~/components/theme-provider";
-import "./globals.css";
+import { Providers } from "~/components/providers";
 import { env } from "~/lib/env";
 import { cn } from "~/lib/utils";
+import "./globals.css";
 
 const fontSans = DM_Sans({
   subsets: ["latin"],
@@ -42,26 +40,19 @@ export default function RootLayout({
           "antialiased",
         )}
       >
-        <NuqsAdapter>
-          <ThemeProvider
-            attribute="class"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NextTopLoader color="var(--primary)" />
-            {children}
-            {env.NODE_ENV === "development" && (
-              <div className="fixed bottom-1 left-1 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-card p-3 font-mono text-xs text-card-foreground">
-                <div className="block sm:hidden">xs</div>
-                <div className="hidden sm:block md:hidden">sm</div>
-                <div className="hidden md:block lg:hidden">md</div>
-                <div className="hidden lg:block xl:hidden">lg</div>
-                <div className="hidden xl:block 2xl:hidden">xl</div>
-                <div className="hidden 2xl:block">2xl</div>
-              </div>
-            )}
-          </ThemeProvider>
-        </NuqsAdapter>
+        <Providers>
+          {children}
+          {env.NODE_ENV === "development" && (
+            <div className="fixed bottom-1 left-1 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-card p-3 font-mono text-xs text-card-foreground">
+              <div className="block sm:hidden">xs</div>
+              <div className="hidden sm:block md:hidden">sm</div>
+              <div className="hidden md:block lg:hidden">md</div>
+              <div className="hidden lg:block xl:hidden">lg</div>
+              <div className="hidden xl:block 2xl:hidden">xl</div>
+              <div className="hidden 2xl:block">2xl</div>
+            </div>
+          )}
+        </Providers>
       </body>
     </html>
   );
