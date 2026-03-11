@@ -16,10 +16,9 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { RepoSchema } from "~/lib/github/schema";
 
 const RepoSearchSchema = z.object({
-  repo: RepoSchema,
+  repo: z.string().includes("/"),
 });
 
 export function RepoSearchForm() {
