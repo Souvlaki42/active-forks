@@ -6,16 +6,14 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check",
-    "tsc": "tsc --noEmit",
-    "format": "biome format --write"
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@workspace/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/react-table": "^8.21.3",
+    "@workspace/ui": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.576.0",
@@ -32,7 +30,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.5",
     "@octokit/types": "^16.0.0",
     "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^25.3.3",
