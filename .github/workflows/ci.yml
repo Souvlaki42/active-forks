@@ -33,8 +33,5 @@ jobs:
       - name: Type-check (no emit)
         run: pnpm tsc
 
-      - name: Check code formatting
-        run: pnpm format
-
-      - name: Lint with Biome
-        run: pnpm lint
+      - name: Format and lint
+        run: pnpm ci
