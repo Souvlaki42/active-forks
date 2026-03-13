@@ -24,3 +24,4 @@ To develop the extension, follow these steps:
 4. Build the extension: `pnpm --filter=@workspace/extension build` or `pnpm --filter=@workspace/extension build:firefox`.
    You can also run the dev server: `pnpm --filter=@workspace/extension dev` or `pnpm --filter=@workspace/extension dev:firefox`.
 5. Load the extension in your browser as unpacked extension in developer mode.
+6. OPTIONAL: If you want to regenerate the icons, run `./generate-icons.sh` after `chmod +x generate-icons.sh` on WSL2/Git Bash/macOS/Linux.
