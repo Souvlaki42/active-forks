@@ -11,5 +11,5 @@ for size in 16 32 48 96 128; do
     --export-width=$size \
     --export-height=$size \
     --export-filename="apps/extension/public/icon/${size}.png" \
-    "packages/ui/src/logo.svg"
+    "apps/extension/public/logo.svg"
 done
