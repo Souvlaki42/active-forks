@@ -25,3 +25,7 @@ Contributions are welcome! Please open an issue or submit a pull request.
 ## License
 
 This project is still licensed under the [Apache License 2.0](LICENSE) as a whole.
+
+This project is inspired by [active-forks](https://github.com/techgaun/active-forks) by [techgaun](https://github.com/techgaun).
+
+Using [Lucide Icons](https://lucide.dev/icons) from [Lucide React](https://lucide.dev/guide/packages/lucide-react) and [GitHub Octicons](https://iconbuddy.com/octicon) from [Icon Buddy](https://iconbuddy.com).
