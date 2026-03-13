@@ -6,7 +6,7 @@
     "lint": "biome lint --write .",
     "format": "biome format --write .",
     "ci": "biome ci .",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --build --noEmit"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",
