@@ -5,15 +5,13 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "tsc": "tsc --noEmit"
+    "start": "next start"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/react-table": "^8.21.3",
-    "@workspace/ui": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.576.0",
