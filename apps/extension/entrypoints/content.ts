@@ -44,7 +44,13 @@ function injectButton() {
   button.style.display = "inline-flex";
   button.style.alignItems = "center";
 
-  button.innerHTML = `<img src="${logo}"" alt="Logo" style="color: ${iconColor};" />`;
+  const wrapper = document.createElement("span");
+  wrapper.style.color = iconColor;
+  wrapper.style.display = "inline-flex";
+  wrapper.style.alignItems = "center";
+  wrapper.innerHTML = logo;
+
+  button.appendChild(wrapper);
 
   listItem.appendChild(button);
   actionList.insertBefore(listItem, actionList.firstChild);
