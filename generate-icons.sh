@@ -6,10 +6,13 @@ if ! command -v inkscape &> /dev/null; then
   exit 1
 fi
 
+output_dir="apps/extension/public/icon"
+mkdir -p "$output_dir"
+
 for size in 16 32 48 96 128; do
   inkscape --export-type=png \
     --export-width=$size \
     --export-height=$size \
-    --export-filename="apps/extension/public/icon/${size}.png" \
-    "apps/extension/public/logo.svg"
+    --export-filename="${output_dir}/${size}.png" \
+    "apps/extension/public/logo.svg" || exit 1
 done
