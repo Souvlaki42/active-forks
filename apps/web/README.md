@@ -45,4 +45,4 @@ This project is licensed under the [Apache License 2.0](LICENSE) license.
 
 This project is a fork of [active-forks](https://github.com/techgaun/active-forks) by [techgaun](https://github.com/techgaun).
 
-Using [Lucide Icons](https://lucide.dev/icons) from [Lucide React](https://lucide.dev/guide/packages/lucide-react) and [Github Octicons](https://iconbuddy.com/octicon) from [Icon Buddy](https://iconbuddy.com).
+Using [Lucide Icons](https://lucide.dev/icons) from [Lucide React](https://lucide.dev/guide/packages/lucide-react) and [GitHub Octicons](https://iconbuddy.com/octicon) from [Icon Buddy](https://iconbuddy.com).
