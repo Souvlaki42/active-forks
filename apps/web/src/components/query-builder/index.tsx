@@ -22,6 +22,7 @@ import { DragHandle } from "./drag-handle";
 import { NotToggle } from "./not-toggle";
 import { ValueEditor } from "./value-editor";
 import { ValueSelector } from "./value-selector";
+import "./styles.css";
 
 export * from "./action-element";
 export * from "./value-selector";
