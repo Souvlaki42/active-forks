@@ -31,7 +31,7 @@ Then, install the dependencies: `pnpm install`
 
 ### GitHub API
 
-You need to have a GitHub API token with the `repo` scope. You can create a new token [here](https://github.com/settings/tokens/new).
+You need to have a GitHub API token with the `repo` scope. You can create a new token on the [GitHub token creation page](https://github.com/settings/tokens/new).
 
 Once you have the token, you need to set the `GITHUB_API_TOKEN` environment variable to the token.
 
