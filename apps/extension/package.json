@@ -1,6 +1,6 @@
 {
   "name": "@workspace/extension",
-  "description": "A button on Git providers that sends you to Active Forks",
+  "description": "A button on GitHub that sends you to Active Forks",
   "private": true,
   "version": "1.0.0",
   "type": "module",
