@@ -29,7 +29,7 @@ jobs:
         run: pnpm install
 
       - name: Type-check (no emit)
-        run: pnpm tsc
+        run: pnpm run tsc
 
       - name: Format and lint
-        run: pnpm ci
+        run: pnpm run ci
