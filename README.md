@@ -1,64 +1,25 @@
 # Active Forks
 
-A app that shows the active forks of a Git repository.
+This project is now a [PNPM](https://pnpm.io/) workspace/monorepo. Thus, you need it for development.
 
-## Features
+It contains both the [web app](./packages/web) and the [browser extension](./packages/extension).
 
-Search for forks by name
-Filter by owner, default branch, stars, forks, watchers, open issues, size, and last push date
-Sort by stars, forks, watchers, open issues, size, and last push date
-Recursively search fork networks
-Hide columns
-Responsive design
+## Development
 
-View forks on GitHub
-View forks on GitLab (might come soon)
-View forks on Bitbucket (might come soon)
-View forks on Gitea (might come soon)
+Go to the [web app instructions](./packages/web/README.md) or the [browser extension instructions](./packages/extension/README.md) to learn more.
 
-![Screenshot of the app](screenshots/current.png)
-This might be outdated, but it's the best I could do.
+Just remember to prefix `pnpm` commands like `pnpm run dev` with `pnpm --filter ` to run them in the context of the workspace.
 
-## TODO
+For example, to run the development server for the web app, use `pnpm --filter @workspace/web run dev`.
 
-For todos, work in progress, and ideas, see [the project board](https://github.com/users/Souvlaki42/projects/3).
+Or, to run the development server for the browser extension, use `pnpm --filter @workspace/extension run dev`.
 
-## Getting Started
+Scripts like `install`, `format`, `lint` and `ci` are meant to run at the workspace level without a filter.
 
-First, fork the repo and clone it.
+## Contributing
 
-Then, install the dependencies:
-
-```bash
-pnpm install
-# or
-yarn install
-# or
-npm install
-```
-
-### GitHub API
-
-You need to have a GitHub API token with the `repo` scope. You can create a new token [here](https://github.com/settings/tokens/new).
-
-Once you have the token, you need to set the `GITHUB_API_TOKEN` environment variable to the token.
-
-Lastly, run the development server:
-
-```bash
-pnpm dev
-# or
-yarn dev
-# or
-npm run dev
-```
-
-And open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 
-This project is licensed under the [Apache License 2.0](LICENSE) license.
-
-This project is a fork of [active-forks](https://github.com/techgaun/active-forks) by [techgaun](https://github.com/techgaun).
-
-Using [Lucide Icons](https://lucide.dev/icons) from [Lucide React](https://lucide.dev/guide/packages/lucide-react) and [Github Octicons](https://iconbuddy.com/octicon) from [Icon Buddy](https://iconbuddy.com).
+This project is still licensed under the [Apache License 2.0](LICENSE) as a whole.
