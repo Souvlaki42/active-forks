@@ -19,6 +19,7 @@ import {
   parseAsInteger,
   parseAsString,
   parseAsStringEnum,
+  useQueryState,
   useQueryStates,
 } from "nuqs";
 import { use, useMemo } from "react";
@@ -76,26 +77,14 @@ export function ForksTable({ promise, loading = false }: Props) {
     },
   );
 
-  const [{ filter_query }, setGlobalFilter] = useQueryStates(
-    {
-      filter_query: parseAsString.withDefault(""),
-    },
-    {
-      urlKeys: {
-        filter_query: "q",
-      },
-    },
+  const [filter_query, setGlobalFilter] = useQueryState(
+    "q",
+    parseAsString.withDefault(""),
   );
 
-  const [{ hidden_columns }, setHiddenColumns] = useQueryStates(
-    {
-      hidden_columns: parseAsArrayOf(parseAsString, ",").withDefault([]),
-    },
-    {
-      urlKeys: {
-        hidden_columns: "hidden",
-      },
-    },
+  const [hidden_columns, setHiddenColumns] = useQueryState(
+    "hidden",
+    parseAsArrayOf(parseAsString, ",").withDefault([]),
   );
 
   const sortingState = useMemo(
@@ -147,16 +136,14 @@ export function ForksTable({ promise, loading = false }: Props) {
     onGlobalFilterChange: (updater: Updater<string>) => {
       const next =
         typeof updater === "function" ? updater(filter_query) : updater;
-      setGlobalFilter({ filter_query: next });
+      setGlobalFilter(next);
     },
     onColumnVisibilityChange: (updater: Updater<VisibilityState>) => {
       const next =
         typeof updater === "function"
           ? updater(columnVisibilityState)
           : updater;
-      setHiddenColumns({
-        hidden_columns: Object.keys(next).filter((key) => !next[key]),
-      });
+      setHiddenColumns(Object.keys(next).filter((key) => !next[key]));
     },
     columns,
     globalFilterFn: fuzzyFilter,
