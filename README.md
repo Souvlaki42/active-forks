@@ -10,7 +10,7 @@ It contains both the [web app](apps/web) and the [browser extension](apps/extens
 
 Go to the [web app instructions](apps/web/README.md) or the [browser extension instructions](apps/extension/README.md) to learn more.
 
-Just remember to prefix `pnpm` commands like `pnpm run dev` with `pnpm --filter ` to run them in the context of the workspace.
+Just remember to prefix `pnpm` commands like `pnpm run dev` with `pnpm --filter` to run them in the context of the workspace.
 
 For example, to run the development server for the web app, use `pnpm --filter @workspace/web run dev`.
 
