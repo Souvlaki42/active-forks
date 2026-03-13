@@ -22,10 +22,14 @@ The `pnpm install` command and scripts such as `format`, `lint`, and `ci` are me
 
 Contributions are welcome! Please open an issue or submit a pull request.
 
-## License
-
-This project is still licensed under the [Apache License 2.0](LICENSE) as a whole.
+## Credits
 
 This project is inspired by [active-forks](https://github.com/techgaun/active-forks) by [techgaun](https://github.com/techgaun).
 
 Using [Lucide Icons](https://lucide.dev/icons) from [Lucide React](https://lucide.dev/guide/packages/lucide-react) and [GitHub Octicons](https://iconbuddy.com/octicon) from [Icon Buddy](https://iconbuddy.com).
+
+The query builder is powered by [React Query Builder](https://react-querybuilder.js.org/) and [Jide's shadcn/ui adaptation of React Query Builder](https://github.com/jide/react-querybuilder-shadcn-ui).
+
+## License
+
+This project is still licensed under the [Apache License 2.0](LICENSE) as a whole.
