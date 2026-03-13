@@ -1,9 +1,0 @@
-{
-  "name": "@workspace/ui",
-  "version": "0.0.0",
-  "private": true,
-  "exports": {
-    "./theme.css": "./src/theme.css",
-    "./logo.svg": "./src/logo.svg"
-  }
-}
