@@ -50,7 +50,12 @@ function injectButton() {
   wrapper.style.alignItems = "center";
   wrapper.innerHTML = logo;
 
+  const label = document.createElement("span");
+  label.textContent = "Active Forks";
+  label.style.marginLeft = "4px";
+
   button.appendChild(wrapper);
+  button.appendChild(label);
 
   listItem.appendChild(button);
   actionList.insertBefore(listItem, actionList.firstChild);
