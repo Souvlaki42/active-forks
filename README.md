@@ -2,11 +2,11 @@
 
 This project is now a [PNPM](https://pnpm.io/) workspace/monorepo. Thus, you need it for development.
 
-It contains both the [web app](./packages/web) and the [browser extension](./packages/extension).
+It contains both the [web app](apps/packages/web) and the [browser extension](apps/packages/extension).
 
 ## Development
 
-Go to the [web app instructions](./packages/web/README.md) or the [browser extension instructions](./packages/extension/README.md) to learn more.
+Go to the [web app instructions](apps/packages/web/README.md) or the [browser extension instructions](apps/packages/extension/README.md) to learn more.
 
 Just remember to prefix `pnpm` commands like `pnpm run dev` with `pnpm --filter ` to run them in the context of the workspace.
 
