@@ -17,7 +17,7 @@ To develop the extension, follow these steps:
 2. Install the dependencies: `pnpm install`.
 3. Setup the environment variables:
 
-- Put `WTX_API_URL=https://forks.moulas.dev` in a `.env` file in the root of the project.
+- Put `WTX_APP_URL=https://forks.moulas.dev` in a `.env` file in the root of the project.
 - If you are using Chromium, put `CHROME_PATH={path_to_chrome_executable}` in the `.env` file.
 - If you are using Firefox, just make sure you have Firefox installed as the binary `firefox` is in your `PATH`.
 
