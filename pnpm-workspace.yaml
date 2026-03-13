@@ -4,6 +4,7 @@ packages:
 onlyBuiltDependencies:
   - "@tailwindcss/oxide"
   - esbuild
+  - msw
   - sharp
   - spawn-sync
   - unrs-resolver
