@@ -16,7 +16,7 @@ For example, to run the development server for the web app, use `pnpm --filter @
 
 Or, to run the development server for the browser extension, use `pnpm --filter @workspace/extension run dev`.
 
-Scripts like `install`, `format`, `lint` and `ci` are meant to run at the workspace level without a filter.
+The `pnpm install` command and scripts such as `format`, `lint`, and `ci` are meant to run at the workspace level without a filter.
 
 ## Contributing
 
