@@ -68,7 +68,7 @@ export const Translations = {
   shiftActionUp: { label: <ChevronUp className="w-4 h-4" /> },
 } satisfies Partial<TranslationsType>;
 
-export const QueryBuilder = getCompatContextProvider({
+export const QueryBuilderContext = getCompatContextProvider({
   controlClassnames: ControlClassnames,
   controlElements: ControlElements,
   translations: Translations,
