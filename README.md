@@ -2,6 +2,8 @@
 
 This project is now a [PNPM](https://pnpm.io/) workspace/monorepo. Thus, you need it for development.
 
+Specifically, you need Node.js version 24.0.0 or higher and PNPM version 10.32.1 or higher.
+
 It contains both the [web app](apps/web) and the [browser extension](apps/extension).
 
 ## Development
