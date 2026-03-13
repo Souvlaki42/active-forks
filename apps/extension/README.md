@@ -1,6 +1,6 @@
 # Active Forks Extension
 
-This extension provides a button on Git providers that sends you to [Active Forks](../web).
+This extension provides a button on GitHub that sends you to [Active Forks](../web).
 
 ![Screenshot of the extension](screenshots/current.png)
 This might be outdated, but it's the best I could do.
