@@ -5,6 +5,10 @@ import { AdvancedQueries } from "~/components/forks-table/advanced-queries";
 import { ForksTable } from "~/components/forks-table/table";
 import { RepoSearchForm } from "~/components/repo-search";
 
+const defaultPromise = Promise.resolve([]);
+
+const LoadingForksTable = () => <ForksTable loading promise={defaultPromise} />;
+
 export default async function Repo({
   params,
 }: {
@@ -19,7 +23,7 @@ export default async function Repo({
     <CardLayout className="flex flex-col gap-4">
       <RepoSearchForm />
       <AdvancedQueries />
-      <Suspense fallback={<ForksTable loading promise={Promise.resolve([])} />}>
+      <Suspense fallback={<LoadingForksTable />}>
         <ForksTable promise={forks} />
       </Suspense>
     </CardLayout>
