@@ -73,3 +73,11 @@ export const QueryBuilderContext = getCompatContextProvider({
   controlElements: ControlElements,
   translations: Translations,
 });
+
+export {
+  type Field,
+  formatQuery,
+  prepareRuleGroup,
+  QueryBuilder,
+  type RuleGroupType,
+} from "react-querybuilder";
