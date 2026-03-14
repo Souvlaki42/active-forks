@@ -34,11 +34,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script
-          src="//unpkg.com/react-scan/dist/auto.global.js"
-          crossOrigin="anonymous"
-          strategy="beforeInteractive"
-        />
+        {env.NODE_ENV === "development" && (
+          <Script
+            src="//unpkg.com/react-scan/dist/auto.global.js"
+            crossOrigin="anonymous"
+            strategy="beforeInteractive"
+          />
+        )}
       </head>
       <body
         className={cn(
