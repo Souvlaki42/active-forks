@@ -3,6 +3,7 @@
 import { createParser, useQueryState } from "nuqs";
 import { Suspense } from "react";
 import { camelCaseToTitleCase } from "~/lib/utils";
+import { columnList } from "./forks-table/columns";
 import {
   type Field,
   formatQuery,
@@ -10,8 +11,7 @@ import {
   QueryBuilder,
   QueryBuilderContext,
   type RuleGroupType,
-} from "../query-builder";
-import { columnList } from "./columns";
+} from "./query-builder";
 
 const fields: Field[] = columnList.map((col) => ({
   name: col,

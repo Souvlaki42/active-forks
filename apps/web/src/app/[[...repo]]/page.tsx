@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { getForks } from "~/actions/github";
+import { AdvancedQueries } from "~/components/advanced-queries";
 import { CardLayout } from "~/components/card-layout";
-import { AdvancedQueries } from "~/components/forks-table/advanced-queries";
 import { ForksTable } from "~/components/forks-table/table";
 import { RepoSearchForm } from "~/components/repo-search";
 
