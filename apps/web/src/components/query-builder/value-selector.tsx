@@ -50,9 +50,9 @@ export const ValueSelector = ({
     />
   ) : (
     <Select
-      value={value}
+      value={Array.isArray(selectedValue) ? selectedValue[0] : selectedValue}
       disabled={disabled}
-      onValueChange={handleOnChange}
+      onValueChange={handleValueChange}
       {...extraProps}
     >
       <SelectTrigger className="w-[180px]">

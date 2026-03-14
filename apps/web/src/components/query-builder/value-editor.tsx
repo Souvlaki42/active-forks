@@ -152,7 +152,7 @@ export const ValueEditor = (allProps: Props) => {
     case "checkbox":
       return (
         <Checkbox
-          id={props.rule.id}
+          id={props.rule?.id}
           className={className}
           title={title}
           disabled={disabled}
@@ -175,7 +175,7 @@ export const ValueEditor = (allProps: Props) => {
           {values.map((v) => (
             <div key={v.name} className="flex items-center space-x-2">
               <RadioGroupItem value={v.name} id={v.name} />
-              <Label htmlFor={v.name}>Default</Label>
+              <Label htmlFor={v.name}>{v.label ?? v.name}</Label>
             </div>
           ))}
         </RadioGroup>

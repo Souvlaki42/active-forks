@@ -36,7 +36,7 @@ export function MultiSelect({
             <DropdownMenuSeparator />
             {og.options.map((opt) => (
               <DropdownMenuCheckboxItem
-                key={opt.name}
+                key={opt.name ?? ""}
                 disabled={!!opt.disabled}
                 checked={currentValue.includes(opt.name ?? "")}
                 onCheckedChange={(checked) => {
