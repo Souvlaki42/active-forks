@@ -5,10 +5,6 @@ import { CardLayout } from "~/components/card-layout";
 import { ForksTable } from "~/components/forks-table/table";
 import { RepoSearchForm } from "~/components/repo-search";
 
-const defaultPromise = Promise.resolve([]);
-
-const LoadingForksTable = () => <ForksTable loading promise={defaultPromise} />;
-
 export default async function Repo({
   params,
 }: {
@@ -23,7 +19,7 @@ export default async function Repo({
     <CardLayout className="flex flex-col gap-4">
       <RepoSearchForm />
       <AdvancedQueries />
-      <Suspense fallback={<LoadingForksTable />}>
+      <Suspense fallback={<ForksTable loading />}>
         <ForksTable promise={forks} />
       </Suspense>
     </CardLayout>

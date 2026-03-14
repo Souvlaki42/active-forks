@@ -44,10 +44,12 @@ import {
 import { columnList, columns } from "./columns";
 import { PaginationControls } from "./pagination";
 
-type Props = {
-  promise: Promise<Fork[]>;
-  loading?: boolean;
-};
+type Props =
+  | {
+      promise?: Promise<Fork[]>;
+      loading?: false;
+    }
+  | { promise?: undefined; loading: true };
 
 export function ForksTable({ promise, loading = false }: Props) {
   const [{ page, per_page }, setPagination] = useQueryStates(
@@ -105,7 +107,7 @@ export function ForksTable({ promise, loading = false }: Props) {
     return hiddenColumnsObj;
   }, [hidden_columns]);
 
-  const data = use(promise);
+  const data = promise ? use(promise) : [];
 
   const table = useReactTable({
     data,
