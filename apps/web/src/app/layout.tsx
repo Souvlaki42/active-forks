@@ -4,6 +4,7 @@ import { Providers } from "~/components/providers";
 import { env } from "~/lib/env";
 import { cn } from "~/lib/utils";
 import "./globals.css";
+import Script from "next/script";
 
 const fontSans = DM_Sans({
   subsets: ["latin"],
@@ -32,6 +33,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {env.NODE_ENV === "development" && (
+          <Script
+            src="//unpkg.com/react-scan/dist/auto.global.js"
+            crossOrigin="anonymous"
+            strategy="beforeInteractive"
+          />
+        )}
+      </head>
       <body
         className={cn(
           fontSans.variable,

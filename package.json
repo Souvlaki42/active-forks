@@ -3,8 +3,7 @@
   "private": true,
   "packageManager": "pnpm@10.32.1",
   "scripts": {
-    "lint": "biome lint --write .",
-    "format": "biome format --write .",
+    "check": "biome check --write .",
     "ci": "biome ci .",
     "tsc": "tsc --build --noEmit"
   },
