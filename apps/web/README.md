@@ -19,10 +19,6 @@ View forks on Gitea (might come soon)
 ![Screenshot of the app](screenshots/current.png)
 This might be outdated, but it's the best I could do.
 
-## TODO
-
-For todos, work in progress, and ideas, see [the project board](https://github.com/users/Souvlaki42/projects/3).
-
 ## Getting Started
 
 First, fork the repo and clone it.

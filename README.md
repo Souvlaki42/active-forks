@@ -18,6 +18,10 @@ Or, to run the development server for the browser extension, use `pnpm --filter 
 
 The `pnpm install` command and scripts such as `check`, and `ci` are meant to run at the workspace level without a filter.
 
+## TODO
+
+For todos, work in progress, and ideas, see [the project board](https://github.com/users/Souvlaki42/projects/3).
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.
