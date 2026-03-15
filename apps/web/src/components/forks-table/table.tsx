@@ -1,4 +1,5 @@
 "use client";
+"use no memo"; // TEMPORARY, Tanstack table doesn't support memoization for now
 
 import {
   flexRender,
