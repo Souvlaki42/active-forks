@@ -9,8 +9,8 @@
         "!deno",
         "!graphql",
         "!oxlint",
-        "...",
-      ],
+        "..."
+      ]
     },
     "TSX": {
       "language_servers": [
@@ -21,8 +21,8 @@
         "!deno",
         "!graphql",
         "!oxlint",
-        "...",
-      ],
+        "..."
+      ]
     },
     "JavaScript": {
       "language_servers": [
@@ -32,8 +32,8 @@
         "!deno",
         "!graphql",
         "!oxlint",
-        "...",
-      ],
-    },
-  },
+        "..."
+      ]
+    }
+  }
 }
