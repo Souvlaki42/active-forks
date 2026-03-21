@@ -23,7 +23,7 @@ import {
   useQueryState,
   useQueryStates,
 } from "nuqs";
-import { use, useMemo } from "react";
+import { memo, use, useMemo } from "react";
 import type { Fork } from "~/actions/github";
 import { camelCaseToTitleCase, fuzzyFilter } from "~/lib/utils";
 import { Button } from "../ui/button";
@@ -52,7 +52,7 @@ type Props =
     }
   | { promise?: undefined; loading: true };
 
-export function ForksTable({ promise, loading = false }: Props) {
+export const ForksTable = memo(({ promise, loading = false }: Props) => {
   const [{ page, per_page }, setPagination] = useQueryStates(
     {
       page: parseAsInteger.withDefault(1),
@@ -252,4 +252,4 @@ export function ForksTable({ promise, loading = false }: Props) {
       <PaginationControls table={table} />
     </div>
   );
-}
+});
