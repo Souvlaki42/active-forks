@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-table";
 import {
   createParser,
-  debounce,
   parseAsArrayOf,
   parseAsBoolean,
   parseAsInteger,
@@ -43,13 +42,11 @@ const advancedQueryParser = createParser<RuleGroupType>({
 export const useAdvancedQueryState = () => {
   const [query, setQuery] = useQueryState(
     "aq",
-    advancedQueryParser
-      .withDefault({
-        id: "aq-0",
-        combinator: "and",
-        rules: [],
-      })
-      .withOptions({ limitUrlUpdates: debounce(500) }),
+    advancedQueryParser.withDefault({
+      id: "aq-0",
+      combinator: "and",
+      rules: [],
+    }),
   );
   return [query, setQuery] as const;
 };
@@ -125,9 +122,7 @@ export const useSortingState = () => {
 export const useGlobalFilterState = () => {
   const [filter_query, setGlobalFilter] = useQueryState(
     "q",
-    parseAsString
-      .withDefault("")
-      .withOptions({ limitUrlUpdates: debounce(300) }),
+    parseAsString.withDefault(""),
   );
 
   const globalFilterState = useMemo(() => ({ filter_query }), [filter_query]);
