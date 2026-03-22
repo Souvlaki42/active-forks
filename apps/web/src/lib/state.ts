@@ -125,7 +125,7 @@ export const useGlobalFilterState = () => {
     parseAsString.withDefault(""),
   );
 
-  const globalFilterState = useMemo(() => ({ filter_query }), [filter_query]);
+  const globalFilterState = useMemo(() => filter_query, [filter_query]);
 
   const setGlobalFilterState = useCallback(
     (updater: Updater<string>) => {
