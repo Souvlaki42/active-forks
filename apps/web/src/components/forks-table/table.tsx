@@ -1,7 +1,9 @@
 "use client";
 "use no memo"; // TEMPORARY, Tanstack table doesn't support memoization for now
 
+import { rankItem } from "@tanstack/match-sorter-utils";
 import {
+  type FilterFn,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -18,7 +20,7 @@ import {
   usePaginationState,
   useSortingState,
 } from "~/lib/state";
-import { camelCaseToTitleCase, fuzzyFilter } from "~/lib/utils";
+import { camelCaseToTitleCase } from "~/lib/utils";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -51,6 +53,11 @@ export const ForksTable = memo(({ promise, loading = false }: Props) => {
   const [sorting, onSortingChange] = useSortingState();
   const [columnVisibility, onColumnVisibilityChange] =
     useColumnVisibilityState();
+  const globalFilterFn: FilterFn<Fork> = (row, columnId, value, addMeta) => {
+    const itemRank = rankItem(row.getValue(columnId), value);
+    addMeta({ itemRank });
+    return itemRank.passed;
+  };
 
   const data = promise ? use(promise) : [];
 
@@ -63,11 +70,11 @@ export const ForksTable = memo(({ promise, loading = false }: Props) => {
       sorting,
       columnVisibility,
     },
-    onPaginationChange,
+    globalFilterFn,
     onSortingChange,
+    onPaginationChange,
     onGlobalFilterChange,
     onColumnVisibilityChange,
-    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
