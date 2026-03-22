@@ -1,18 +1,9 @@
-import { rankItem } from "@tanstack/match-sorter-utils";
-import type { FilterFn } from "@tanstack/react-table";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { Fork } from "~/actions/github";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-export const fuzzyFilter: FilterFn<Fork> = (row, columnId, value, addMeta) => {
-  const itemRank = rankItem(row.getValue(columnId), value);
-  addMeta({ itemRank });
-  return itemRank.passed;
-};
 
 type Success<T> = {
   data: T;

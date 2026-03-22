@@ -1,29 +1,26 @@
 "use client";
+"use no memo"; // TEMPORARY, Tanstack table doesn't support memoization for now
 
+import { rankItem } from "@tanstack/match-sorter-utils";
 import {
+  type FilterFn,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  type PaginationState,
-  type SortingState,
-  type Updater,
   useReactTable,
-  type VisibilityState,
 } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
-import {
-  parseAsArrayOf,
-  parseAsBoolean,
-  parseAsInteger,
-  parseAsString,
-  parseAsStringEnum,
-  useQueryStates,
-} from "nuqs";
-import { use, useMemo } from "react";
+import { memo, use } from "react";
 import type { Fork } from "~/actions/github";
-import { camelCaseToTitleCase, fuzzyFilter } from "~/lib/utils";
+import {
+  useColumnVisibilityState,
+  useGlobalFilterState,
+  usePaginationState,
+  useSortingState,
+} from "~/lib/state";
+import { camelCaseToTitleCase } from "~/lib/utils";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -40,126 +37,44 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { columnList, columns } from "./columns";
+import { columns } from "./columns";
 import { PaginationControls } from "./pagination";
 
-type Props = {
-  promise: Promise<Fork[]>;
-  loading?: boolean;
-};
+type Props =
+  | {
+      promise?: Promise<Fork[]>;
+      loading?: false;
+    }
+  | { promise?: undefined; loading: true };
 
-export function ForksTable({ promise, loading = false }: Props) {
-  const [{ page, per_page }, setPagination] = useQueryStates(
-    {
-      page: parseAsInteger.withDefault(1),
-      per_page: parseAsInteger.withDefault(30),
-    },
-    {
-      history: "push",
-      urlKeys: {
-        page: "page",
-        per_page: "per_page",
-      },
-    },
-  );
+export const ForksTable = memo(({ promise, loading = false }: Props) => {
+  const [pagination, onPaginationChange] = usePaginationState();
+  const [globalFilter, onGlobalFilterChange] = useGlobalFilterState();
+  const [sorting, onSortingChange] = useSortingState();
+  const [columnVisibility, onColumnVisibilityChange] =
+    useColumnVisibilityState();
+  const globalFilterFn: FilterFn<Fork> = (row, columnId, value, addMeta) => {
+    const itemRank = rankItem(row.getValue(columnId), value);
+    addMeta({ itemRank });
+    return itemRank.passed;
+  };
 
-  const [{ sort_id, sort_desc }, setSorting] = useQueryStates(
-    {
-      sort_id: parseAsStringEnum(columnList).withDefault("stars"),
-      sort_desc: parseAsBoolean.withDefault(true),
-    },
-    {
-      urlKeys: {
-        sort_id: "sort",
-        sort_desc: "desc",
-      },
-    },
-  );
-
-  const [{ filter_query }, setGlobalFilter] = useQueryStates(
-    {
-      filter_query: parseAsString.withDefault(""),
-    },
-    {
-      urlKeys: {
-        filter_query: "q",
-      },
-    },
-  );
-
-  const [{ hidden_columns }, setHiddenColumns] = useQueryStates(
-    {
-      hidden_columns: parseAsArrayOf(parseAsString, ",").withDefault([]),
-    },
-    {
-      urlKeys: {
-        hidden_columns: "hidden",
-      },
-    },
-  );
-
-  const sortingState = useMemo(
-    () => [{ id: sort_id, desc: sort_desc }],
-    [sort_id, sort_desc],
-  );
-
-  const paginationState = useMemo(
-    () => ({ pageIndex: page - 1, pageSize: per_page }),
-    [page, per_page],
-  );
-
-  const columnVisibilityState = useMemo(() => {
-    const hiddenColumnsObj: VisibilityState = {};
-    columnList.forEach((col) => {
-      hiddenColumnsObj[col] = !hidden_columns.includes(col);
-    });
-    return hiddenColumnsObj;
-  }, [hidden_columns]);
-
-  const data = use(promise);
+  const data = promise ? use(promise) : [];
 
   const table = useReactTable({
     data,
-    state: {
-      pagination: paginationState,
-      globalFilter: filter_query,
-      sorting: sortingState,
-      columnVisibility: columnVisibilityState,
-    },
-    onPaginationChange: (updater: Updater<PaginationState>) => {
-      const next =
-        typeof updater === "function"
-          ? updater({ pageIndex: page - 1, pageSize: per_page })
-          : updater;
-      setPagination({ page: next.pageIndex + 1, per_page: next.pageSize });
-    },
-    onSortingChange: (updater: Updater<SortingState>) => {
-      const next =
-        typeof updater === "function"
-          ? updater([{ id: sort_id, desc: sort_desc }])
-          : updater;
-      if (next.length === 0) return;
-      setSorting({
-        sort_id: next[0].id,
-        sort_desc: next[0].desc,
-      });
-    },
-    onGlobalFilterChange: (updater: Updater<string>) => {
-      const next =
-        typeof updater === "function" ? updater(filter_query) : updater;
-      setGlobalFilter({ filter_query: next });
-    },
-    onColumnVisibilityChange: (updater: Updater<VisibilityState>) => {
-      const next =
-        typeof updater === "function"
-          ? updater(columnVisibilityState)
-          : updater;
-      setHiddenColumns({
-        hidden_columns: Object.keys(next).filter((key) => !next[key]),
-      });
-    },
     columns,
-    globalFilterFn: fuzzyFilter,
+    state: {
+      pagination,
+      globalFilter,
+      sorting,
+      columnVisibility,
+    },
+    globalFilterFn,
+    onSortingChange,
+    onPaginationChange,
+    onGlobalFilterChange,
+    onColumnVisibilityChange,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -262,4 +177,4 @@ export function ForksTable({ promise, loading = false }: Props) {
       <PaginationControls table={table} />
     </div>
   );
-}
+});

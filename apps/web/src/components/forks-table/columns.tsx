@@ -82,4 +82,6 @@ export const columns = [
   }),
 ];
 
-export const columnList = columns.map((col) => col.accessorKey);
+export const columnList = columns
+  .map((col) => col.accessorKey)
+  .filter((k): k is string => k !== undefined);
